@@ -2,13 +2,12 @@ package mysql
 
 import (
 	"backend/config"
+	userdata "backend/features/User/data"
 	"fmt"
 	"log"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-
-	userData "backend/features/User/data"
 )
 
 func InitDB(cfg *config.AppConfig) *gorm.DB {
@@ -23,5 +22,5 @@ func InitDB(cfg *config.AppConfig) *gorm.DB {
 }
 
 func MigrateData(db *gorm.DB) {
-	db.AutoMigrate(userData.User{})
+	db.AutoMigrate(userdata.User{})
 }
