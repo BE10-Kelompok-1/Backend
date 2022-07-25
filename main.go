@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend/config"
+	"backend/factory"
 	"backend/infrastructure/database/mysql"
 	"fmt"
 
@@ -13,6 +14,8 @@ func main() {
 	db := mysql.InitDB(cfg)
 	mysql.MigrateData(db)
 	e := echo.New()
+
+	factory.InitFactory(e, db)
 
 	fmt.Println("Starting programm ...")
 	dsn := fmt.Sprintf(":%d", config.SERVERPORT)
