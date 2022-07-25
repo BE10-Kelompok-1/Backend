@@ -20,4 +20,5 @@ func RouteUser(e *echo.Echo, uh domain.UserHandler) {
 	user.GET("/:username", uh.Search())
 	user.DELETE("", uh.Delete(), middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET))))
 	user.POST("", uh.Register())
+	user.PUT("", uh.Update(), middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET))))
 }
