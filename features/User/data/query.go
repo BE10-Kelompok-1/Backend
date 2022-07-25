@@ -19,7 +19,20 @@ func New(db *gorm.DB) domain.UserData {
 
 // RegisterData implements domain.UserData
 func (ud *userData) RegisterData(newuser domain.User) domain.User {
-	panic("unimplemented")
+	var user = FromModel(newuser)
+	err := ud.db.Create(&user).Error
+
+	if user.ID == 0 {
+		log.Println("Invalid ID")
+		return domain.User{}
+	}
+
+	if err != nil {
+		log.Println("Cant create user object", err.Error())
+		return domain.User{}
+	}
+
+	return user.ToModel()
 }
 
 // UpdateUserData implements domain.UserData

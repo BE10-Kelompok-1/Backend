@@ -2,20 +2,19 @@ package data
 
 import (
 	"backend/domain"
-	"time"
 
 	"gorm.io/gorm"
 )
 
 type User struct {
 	gorm.Model
-	Firstname    string    `json:"firstname" validate:"required"`
-	Lastname     string    `json:"lastname" validate:"required"`
-	Username     string    `json:"username" validate:"required"`
-	Email        string    `json:"email" validate:"required,email"`
-	Password     string    `json:"password" validate:"required"`
-	Birthdate    time.Time `json:"birthdate" validate:"required"`
-	Photoprofile string    `json:"photoprofile"`
+	Firstname    string `json:"firstname" validate:"required"`
+	Lastname     string `json:"lastname" validate:"required"`
+	Username     string `json:"username" validate:"required"`
+	Email        string `json:"email" validate:"required,email"`
+	Password     string `json:"password" validate:"required"`
+	Birthdate    string `json:"birthdate" validate:"required"`
+	Photoprofile string `json:"photoprofile"`
 }
 
 func (u *User) ToModel() domain.User {
@@ -43,7 +42,7 @@ func ParseToArr(arr []User) []domain.User {
 
 func FromModel(data domain.User) User {
 	var res User
-
+	res.ID = uint(data.ID)
 	res.Firstname = data.Firstname
 	res.Lastname = data.Lastname
 	res.Username = data.Username

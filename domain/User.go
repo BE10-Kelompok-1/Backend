@@ -1,8 +1,6 @@
 package domain
 
 import (
-	"time"
-
 	"github.com/labstack/echo/v4"
 )
 
@@ -13,7 +11,7 @@ type User struct {
 	Username     string
 	Email        string
 	Password     string
-	Birthdate    time.Time
+	Birthdate    string
 	Photoprofile string
 }
 
@@ -25,8 +23,8 @@ type UserHandler interface {
 }
 
 type UserUseCase interface {
-	Register(newuser User, cost int) (User, error)
-	UpdateUser(newuser User, userid, cost int) (User, error)
+	RegisterUser(newuser User, cost int) int
+	UpdateUser(newuser User, userid, cost int) int
 	SearchUser(username string) (User, error)
 	DeleteUser(userid int) (bool, error)
 }
