@@ -27,14 +27,26 @@ func (ud *userData) UpdateUserData(newuser domain.User) domain.User {
 	panic("unimplemented")
 }
 
-func (ud *userData) SearchUserData(username string) domain.User {
+func (ud *userData) SearchUserData(username string) (domain.User, error) {
 	var tmp User
-	err := ud.db.Where("Username = ?", username).First(&tmp).Error
+	err := ud.db.Where("username = ?", username).First(&tmp).Error
 	if err != nil {
 		log.Println("There is problem with data", err.Error())
-		return domain.User{}
+		return domain.User{}, err
 	}
-	return tmp.ToModel()
+	return tmp.ToModel(), nil
 }
 
-func (ud *userData)
+func (ud *userData) DeleteUserData(userid int) bool {
+	res := ud.db.Where("ID = ?", userid).Delete(&User{})
+	if res.Error != nil {
+		log.Println("Cannot delete data", res.Error.Error())
+		return false
+	}
+
+	if res.RowsAffected < 1 {
+		log.Println("No data deleted", res.Error.Error())
+		return false
+	}
+	return true
+}

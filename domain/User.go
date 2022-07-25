@@ -34,6 +34,6 @@ type UserUseCase interface {
 type UserData interface {
 	RegisterData(newuser User) User
 	UpdateUserData(newuser User) User
-	SearchUserData(userid int) User
+	SearchUserData(username string) (User, error)
 	DeleteUserData(userid int) bool
 }
