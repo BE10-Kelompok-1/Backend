@@ -175,14 +175,20 @@ func (uh *userHandler) Login() echo.HandlerFunc {
 
 		if bind != nil {
 			log.Println("invalid input")
-			return c.JSON(http.StatusBadRequest, "Invalid Input")
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    500,
+				"message": "There is an error in internal server",
+			})
 		}
 
 		data, err := uh.useUsecase.LoginUser(datalogin.ToModelLogin())
 
 		if err != nil {
 			log.Println("Login failed", err)
-			return c.JSON(http.StatusInternalServerError, data)
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    400,
+				"message": "Wrong username or password",
+			})
 		}
 
 		token := common.GenerateToken(int(data.ID))
@@ -191,7 +197,6 @@ func (uh *userHandler) Login() echo.HandlerFunc {
 			"code":    200,
 			"message": "Login success",
 			"token":   token,
-			"data":    data,
 		})
 	}
 }
