@@ -5,7 +5,6 @@ import (
 	"backend/features/common"
 	"log"
 	"net/http"
-	"strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -115,42 +114,56 @@ func (uh *userHandler) Update() echo.HandlerFunc {
 func (uh *userHandler) Search() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		cnv := c.Param("username")
-		data, err := uh.useUsecase.SearchUser(cnv)
+		data, status := uh.useUsecase.SearchUser(cnv)
 
-		if err != nil {
-			if strings.Contains(err.Error(), "not found") {
-				return c.JSON(http.StatusNotFound, err.Error())
-			} else {
-				return c.JSON(http.StatusInternalServerError, err.Error())
-			}
+		if status == 404 {
+			return c.JSON(http.StatusNotFound, map[string]interface{}{
+				"code":    status,
+				"message": "Data not found",
+			})
 		}
+
+		if status == 500 {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    status,
+				"message": "There is an error in internal server",
+			})
+		}
+
 		return c.JSON(http.StatusFound, map[string]interface{}{
 			"photoprofile": data.Photoprofile,
 			"firstname":    data.Firstname,
 			"lastname":     data.Lastname,
 			"username":     data.Username,
+			"code":         status,
+			"message":      "get data success",
 		})
 	}
 }
 
 func (uh *userHandler) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id := common.ExtractData(c)
-		data, err := uh.useUsecase.DeleteUser(id)
 
-		if err != nil {
-			if strings.Contains(err.Error(), "not found") {
-				return c.JSON(http.StatusNotFound, err.Error())
-			} else {
-				return c.JSON(http.StatusInternalServerError, err.Error())
-			}
+		id := common.ExtractData(c)
+		status := uh.useUsecase.DeleteUser(id)
+
+		if status == 404 {
+			return c.JSON(http.StatusNotFound, map[string]interface{}{
+				"code":    status,
+				"message": "Data not found",
+			})
 		}
-		if !data {
-			return c.JSON(http.StatusInternalServerError, "cannot delete")
+
+		if status == 500 {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    status,
+				"message": "There is an error in internal server",
+			})
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"message": "success delete user",
+			"code":    status,
+			"message": "Success delete data",
 		})
 	}
 }

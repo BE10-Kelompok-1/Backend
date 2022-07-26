@@ -53,14 +53,14 @@ func (ud *userData) UpdateUserData(newuser domain.User) domain.User {
 	return user.ToModel()
 }
 
-func (ud *userData) SearchUserData(username string) (domain.User, error) {
+func (ud *userData) SearchUserData(username string) domain.User {
 	var tmp User
 	err := ud.db.Where("username = ?", username).First(&tmp).Error
 	if err != nil {
 		log.Println("There is problem with data", err.Error())
-		return domain.User{}, err
+		return domain.User{}
 	}
-	return tmp.ToModel(), nil
+	return tmp.ToModel()
 }
 
 func (ud *userData) DeleteUserData(userid int) bool {
