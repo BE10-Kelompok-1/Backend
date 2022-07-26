@@ -3,12 +3,14 @@ package delivery
 import "backend/domain"
 
 type PostFormat struct {
-	Photo   string `json:"Photo"`
-	Caption string `json:"Caption" validate:"required"`
+	User    domain.User `gorm:"foreignKey:Username"`
+	Photo   string      `json:"Photo"`
+	Caption string      `json:"Caption" validate:"required"`
 }
 
 func (i *PostFormat) ToModel() domain.Post {
 	return domain.Post{
+		User:    i.User,
 		Photo:   i.Photo,
 		Caption: i.Caption,
 	}

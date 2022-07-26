@@ -8,6 +8,7 @@ import (
 
 type Post struct {
 	ID        int
+	User      User
 	Photo     string
 	Caption   string
 	CreatedAt time.Time
@@ -24,6 +25,6 @@ type PostUseCase interface {
 }
 
 type PostData interface {
-	CreatePostData(newpost Post) User
-	UpdatePostData(newpost Post) User
+	CreatePostData(newpost Post) Post
+	UpdatePostData(newpost Post) Post
 }
