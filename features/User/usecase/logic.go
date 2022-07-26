@@ -79,11 +79,6 @@ func (uuc *userUseCase) UpdateUser(newuser domain.User, userid int, cost int) in
 	var user = data.FromModel(newuser)
 	validError := uuc.validate.Struct(user)
 
-	if userid == 0 {
-		log.Println("Data not found")
-		return 404
-	}
-
 	if validError != nil {
 		log.Println("Validation errror : ", validError.Error())
 		return 400
@@ -99,7 +94,12 @@ func (uuc *userUseCase) UpdateUser(newuser domain.User, userid int, cost int) in
 	user.ID = uint(userid)
 	user.Password = string(hashed)
 
-	uuc.userData.UpdateUserData(user.ToModel())
+	update := uuc.userData.UpdateUserData(user.ToModel())
+
+	if update.ID == 0 {
+		log.Println("Data not found")
+		return 404
+	}
 
 	return 200
 }
