@@ -37,7 +37,20 @@ func (ud *userData) RegisterData(newuser domain.User) domain.User {
 
 // UpdateUserData implements domain.UserData
 func (ud *userData) UpdateUserData(newuser domain.User) domain.User {
-	panic("unimplemented")
+	var user = FromModel(newuser)
+	err := ud.db.Model(&User{}).Where("ID = ?", user.ID).Updates(user)
+
+	if err.Error != nil {
+		log.Println("Cant update user object", err.Error.Error())
+		return domain.User{}
+	}
+
+	if err.RowsAffected == 0 {
+		log.Println("Data Not Found")
+		return domain.User{}
+	}
+
+	return user.ToModel()
 }
 
 func (ud *userData) SearchUserData(username string) (domain.User, error) {

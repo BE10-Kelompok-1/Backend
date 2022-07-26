@@ -66,8 +66,50 @@ func (uh *userHandler) Register() echo.HandlerFunc {
 }
 
 // Update implements domain.UserHandler
+
 func (uh *userHandler) Update() echo.HandlerFunc {
-	panic("unimplemented")
+	return func(c echo.Context) error {
+		var newuser UserFormat
+		cost := 10
+		id := common.ExtractData(c)
+		bind := c.Bind(&newuser)
+
+		if bind != nil {
+			log.Println("cant bind")
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    500,
+				"message": "There is an error in internal server",
+			})
+		}
+
+		status := uh.useUsecase.UpdateUser(newuser.ToModel(), id, cost)
+
+		if status == 400 {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    status,
+				"message": "Wrong input",
+			})
+		}
+
+		if status == 404 {
+			return c.JSON(http.StatusNotFound, map[string]interface{}{
+				"code":    status,
+				"message": "Data not found",
+			})
+		}
+
+		if status == 500 {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    status,
+				"message": "There is an error in internal server",
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    status,
+			"message": "Update success",
+		})
+	}
 }
 
 func (uh *userHandler) Search() echo.HandlerFunc {

@@ -76,5 +76,30 @@ func (uuc *userUseCase) RegisterUser(newuser domain.User, cost int) int {
 
 // UpdateUser implements domain.UserUseCase
 func (uuc *userUseCase) UpdateUser(newuser domain.User, userid int, cost int) int {
-	panic("unimplemented")
+	var user = data.FromModel(newuser)
+	validError := uuc.validate.Struct(user)
+
+	if validError != nil {
+		log.Println("Validation errror : ", validError.Error())
+		return 400
+	}
+
+	hashed, err := bcrypt.GenerateFromPassword([]byte(user.Password), cost)
+
+	if err != nil {
+		log.Println("Error encrypt password", err)
+		return 500
+	}
+
+	user.ID = uint(userid)
+	user.Password = string(hashed)
+
+	update := uuc.userData.UpdateUserData(user.ToModel())
+
+	if update.ID == 0 {
+		log.Println("Data not found")
+		return 404
+	}
+
+	return 200
 }
