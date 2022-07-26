@@ -10,11 +10,11 @@ import (
 )
 
 func RouteUser(e *echo.Echo, uh domain.UserHandler) {
-	// e.Pre(middleware.CORS())
-	// e.Use(middleware.RemoveTrailingSlash())
-	// e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-	// 	Format: "method=${method}, uri=${uri}, status=${status}\n",
-	// }))
+	e.Pre(middleware.CORS())
+	e.Use(middleware.RemoveTrailingSlash())
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "method=${method}, uri=${uri}, status=${status}\n",
+	}))
 
 	user := e.Group("/user")
 	user.GET("/:username", uh.Search())
