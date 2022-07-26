@@ -66,5 +66,38 @@ func (ph *postHandler) Create() echo.HandlerFunc {
 
 // Update implements domain.PostHandler
 func (ph *postHandler) Update() echo.HandlerFunc {
-	panic("unimplemented")
+	return func(c echo.Context) error {
+		var newpost PostFormat
+		id := 1
+		bind := c.Bind(&newpost)
+
+		if bind != nil {
+			log.Println("cant bind")
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    500,
+				"message": "There is an error in internal server",
+			})
+		}
+
+		status := ph.postUseCase.UpdatePost(newpost.ToModel(), id)
+
+		if status == 400 {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    status,
+				"message": "Wrong input",
+			})
+		}
+
+		if status == 404 {
+			return c.JSON(http.StatusNotFound, map[string]interface{}{
+				"code":    status,
+				"message": "Data not found",
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    status,
+			"message": "Register success",
+		})
+	}
 }

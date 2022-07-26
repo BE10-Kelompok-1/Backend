@@ -10,7 +10,6 @@ type PostFormat struct {
 
 func (i *PostFormat) ToModel() domain.Post {
 	return domain.Post{
-		User:    i.User,
 		Photo:   i.Photo,
 		Caption: i.Caption,
 	}
