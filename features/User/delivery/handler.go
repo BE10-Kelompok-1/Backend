@@ -130,7 +130,7 @@ func (uh *userHandler) Search() echo.HandlerFunc {
 			})
 		}
 
-		return c.JSON(http.StatusFound, map[string]interface{}{
+		return c.JSON(http.StatusOK, map[string]interface{}{
 			"photoprofile": data.Photoprofile,
 			"firstname":    data.Firstname,
 			"lastname":     data.Lastname,
