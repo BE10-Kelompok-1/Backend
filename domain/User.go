@@ -25,13 +25,13 @@ type UserHandler interface {
 type UserUseCase interface {
 	RegisterUser(newuser User, cost int) int
 	UpdateUser(newuser User, userid, cost int) int
-	SearchUser(username string) (User, error)
-	DeleteUser(userid int) (bool, error)
+	SearchUser(username string) (User, int)
+	DeleteUser(userid int) int
 }
 
 type UserData interface {
 	RegisterData(newuser User) User
 	UpdateUserData(newuser User) User
-	SearchUserData(username string) (User, error)
+	SearchUserData(username string) User
 	DeleteUserData(userid int) bool
 }
