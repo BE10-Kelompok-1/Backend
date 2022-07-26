@@ -167,3 +167,36 @@ func (uh *userHandler) Delete() echo.HandlerFunc {
 		})
 	}
 }
+
+func (uh *userHandler) Login() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		var datalogin LoginFormat
+		bind := c.Bind(&datalogin)
+
+		if bind != nil {
+			log.Println("invalid input")
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    500,
+				"message": "There is an error in internal server",
+			})
+		}
+
+		data, err := uh.useUsecase.LoginUser(datalogin.ToModelLogin())
+
+		if err != nil {
+			log.Println("Login failed", err)
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    400,
+				"message": "Wrong username or password",
+			})
+		}
+
+		token := common.GenerateToken(int(data.ID))
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    200,
+			"message": "Login success",
+			"token":   token,
+		})
+	}
+}

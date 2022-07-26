@@ -20,6 +20,7 @@ type UserHandler interface {
 	Update() echo.HandlerFunc
 	Search() echo.HandlerFunc
 	Delete() echo.HandlerFunc
+	Login() echo.HandlerFunc
 }
 
 type UserUseCase interface {
@@ -27,6 +28,7 @@ type UserUseCase interface {
 	UpdateUser(newuser User, userid, cost int) int
 	SearchUser(username string) (User, int)
 	DeleteUser(userid int) int
+	LoginUser(userdata User) (User, error)
 }
 
 type UserData interface {
@@ -34,4 +36,6 @@ type UserData interface {
 	UpdateUserData(newuser User) User
 	SearchUserData(username string) User
 	DeleteUserData(userid int) bool
+	LoginData(userdata User) User
+	GetPasswordData(name string) string
 }

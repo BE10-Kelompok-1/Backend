@@ -76,3 +76,28 @@ func (ud *userData) DeleteUserData(userid int) bool {
 	}
 	return true
 }
+
+func (ud *userData) GetPasswordData(username string) string {
+	var user User
+	err := ud.db.Find(&user, "username = ?", username).Error
+
+	if err != nil {
+		log.Println("Cant retrieve user data", err.Error())
+		return ""
+	}
+
+	return user.Password
+}
+
+func (ud *userData) LoginData(userdata domain.User) domain.User {
+	var user = FromModel(userdata)
+	err := ud.db.First(&user, "username  = ?", userdata.Username).Error
+
+	if err != nil {
+		log.Println("Cant login data", err.Error())
+		return domain.User{}
+	}
+
+	return user.ToModel()
+
+}

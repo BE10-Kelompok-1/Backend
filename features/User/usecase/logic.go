@@ -3,6 +3,7 @@ package usecase
 import (
 	"backend/domain"
 	"backend/features/User/data"
+	"errors"
 	"log"
 
 	"github.com/go-playground/validator/v10"
@@ -98,4 +99,23 @@ func (uuc *userUseCase) UpdateUser(newuser domain.User, userid int, cost int) in
 	}
 
 	return 200
+}
+
+func (uuc *userUseCase) LoginUser(userdata domain.User) (domain.User, error) {
+	login := uuc.userData.LoginData(userdata)
+
+	if login.ID == 0 {
+		return domain.User{}, errors.New("no data")
+	}
+
+	hashpw := uuc.userData.GetPasswordData(userdata.Username)
+
+	err := bcrypt.CompareHashAndPassword([]byte(hashpw), []byte(userdata.Password))
+
+	if err != nil {
+		log.Println(bcrypt.ErrMismatchedHashAndPassword, err)
+		return domain.User{}, err
+	}
+
+	return login, nil
 }
