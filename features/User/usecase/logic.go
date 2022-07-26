@@ -2,26 +2,17 @@ package usecase
 
 import (
 	"backend/domain"
+	"backend/features/User/data"
 	"errors"
 	"log"
 
 	"github.com/go-playground/validator/v10"
-	"gorm.io/gorm"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type userUseCase struct {
 	userData domain.UserData
 	validate *validator.Validate
-}
-
-// Register implements domain.UserUseCase
-func (*userUseCase) Register(newuser domain.User, cost int) (domain.User, error) {
-	panic("unimplemented")
-}
-
-// UpdateUser implements domain.UserUseCase
-func (*userUseCase) UpdateUser(newuser domain.User, userid int, cost int) (domain.User, error) {
-	panic("unimplemented")
 }
 
 func New(uuc domain.UserData, v *validator.Validate) domain.UserUseCase {
@@ -31,26 +22,100 @@ func New(uuc domain.UserData, v *validator.Validate) domain.UserUseCase {
 	}
 }
 
-func (uuc *userUseCase) SearchUser(username string) (domain.User, error) {
-	data, err := uuc.userData.SearchUserData(username)
+func (uuc *userUseCase) SearchUser(username string) (domain.User, int) {
+	search := uuc.userData.SearchUserData(username)
 
-	if err != nil {
-		log.Println("Use Case", err.Error())
-		if err == gorm.ErrRecordNotFound {
-			return domain.User{}, errors.New("data not found")
-		} else {
-			return domain.User{}, errors.New("server error")
-		}
+	if search.ID == 0 {
+		log.Println("Data not found")
+		return domain.User{}, 404
 	}
-	return data, nil
+
+	return search, 200
 }
 
-func (uuc *userUseCase) DeleteUser(id int) (bool, error) {
-	data := uuc.userData.DeleteUserData(id)
+func (uuc *userUseCase) DeleteUser(id int) int {
+	status := uuc.userData.DeleteUserData(id)
 
-	if !data {
-		return false, errors.New("failed delete")
+	if !status {
+		log.Println("Data not found")
+		return 404
 	}
 
-	return true, nil
+	return 200
+}
+
+// Register implements domain.UserUseCase
+func (uuc *userUseCase) RegisterUser(newuser domain.User, cost int) int {
+	var user = data.FromModel(newuser)
+	validError := uuc.validate.Struct(user)
+
+	if validError != nil {
+		log.Println("Validation errror : ", validError.Error())
+		return 400
+	}
+
+	hashed, hasherr := bcrypt.GenerateFromPassword([]byte(user.Password), cost)
+
+	if hasherr != nil {
+		log.Println("Cant encrypt: ", hasherr)
+		return 500
+	}
+	user.Password = string(hashed)
+	insert := uuc.userData.RegisterData(user.ToModel())
+
+	if insert.ID == 0 {
+		log.Println("Empty data")
+		return 404
+	}
+
+	return 200
+}
+
+// UpdateUser implements domain.UserUseCase
+func (uuc *userUseCase) UpdateUser(newuser domain.User, userid int, cost int) int {
+	var user = data.FromModel(newuser)
+	validError := uuc.validate.Struct(user)
+
+	if validError != nil {
+		log.Println("Validation errror : ", validError.Error())
+		return 400
+	}
+
+	hashed, err := bcrypt.GenerateFromPassword([]byte(user.Password), cost)
+
+	if err != nil {
+		log.Println("Error encrypt password", err)
+		return 500
+	}
+
+	user.ID = uint(userid)
+	user.Password = string(hashed)
+
+	update := uuc.userData.UpdateUserData(user.ToModel())
+
+	if update.ID == 0 {
+		log.Println("Data not found")
+		return 404
+	}
+
+	return 200
+}
+
+func (uuc *userUseCase) LoginUser(userdata domain.User) (domain.User, error) {
+	login := uuc.userData.LoginData(userdata)
+
+	if login.ID == 0 {
+		return domain.User{}, errors.New("no data")
+	}
+
+	hashpw := uuc.userData.GetPasswordData(userdata.Username)
+
+	err := bcrypt.CompareHashAndPassword([]byte(hashpw), []byte(userdata.Password))
+
+	if err != nil {
+		log.Println(bcrypt.ErrMismatchedHashAndPassword, err)
+		return domain.User{}, err
+	}
+
+	return login, nil
 }
