@@ -16,7 +16,7 @@ func RouteUser(e *echo.Echo, uh domain.UserHandler) {
 	// 	Format: "method=${method}, uri=${uri}, status=${status}\n",
 	// }))
 
-	user := e.Group("/user")
+	user := e.Group("/users")
 	user.GET("/:username", uh.Search())
 	user.DELETE("", uh.Delete(), middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET))))
 	user.POST("", uh.Register())
