@@ -47,6 +47,21 @@ func (puc *postUsecase) CreatePost(newpost domain.Post, userid int) int {
 }
 
 // UpdatePost implements domain.PostUseCase
-func (puc *postUsecase) UpdatePost(newpost domain.Post, userid int) int {
-	panic("unimplemented")
+func (puc *postUsecase) UpdatePost(newpost domain.Post, postid int) int {
+	var post = data.FromModel(newpost)
+	validError := puc.validate.Struct(post)
+
+	if validError != nil {
+		log.Println("Validation errror : ", validError)
+		return 400
+	}
+	post.ID = uint(postid)
+	update := puc.postData.UpdatePostData(post.ToModel())
+
+	if update.ID == 0 {
+		log.Println("Empty Data")
+		return 404
+	}
+
+	return 200
 }
