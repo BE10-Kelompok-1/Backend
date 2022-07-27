@@ -70,17 +70,24 @@ func (_m *UserData) RegisterData(newuser domain.User) domain.User {
 }
 
 // SearchUserData provides a mock function with given fields: username
-func (_m *UserData) SearchUserData(username string) domain.User {
+func (_m *UserData) SearchUserData(username string) (domain.User, []domain.User_Posting) {
 	ret := _m.Called(username)
 
-	var r0 domain.User
-	if rf, ok := ret.Get(0).(func(string) domain.User); ok {
+	var r0 []domain.User_Posting
+	if rf, ok := ret.Get(0).(func(string) []domain.User_Posting); ok {
 		r0 = rf(username)
 	} else {
-		r0 = ret.Get(0).(domain.User)
+		r0 = ret.Get(0).([]domain.User_Posting)
 	}
 
-	return r0
+	var r1 domain.User
+	if rf, ok := ret.Get(1).(func(string) domain.User); ok {
+		r1 = rf(username)
+	} else {
+		r1 = ret.Get(1).(domain.User)
+	}
+
+	return r1, r0
 }
 
 // UpdateUserData provides a mock function with given fields: newuser

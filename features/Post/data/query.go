@@ -67,7 +67,7 @@ func (pd *postData) ReadAllPostData() []domain.Post {
 
 func (pd *postData) ReadMyPostData(userid int) []domain.Post {
 	var tmp []Post
-	err := pd.db.Where("Postby = ?", userid).Find(&tmp).Error
+	err := pd.db.Where("Userid = ?", userid).Find(&tmp).Error
 
 	if err != nil {
 		log.Println("There is problem with data")

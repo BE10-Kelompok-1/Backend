@@ -22,19 +22,23 @@ func New(uuc domain.UserData, v *validator.Validate) domain.UserUseCase {
 	}
 }
 
-func (uuc *userUseCase) SearchUser(username string) (domain.User, int) {
-	search := uuc.userData.SearchUserData(username)
+func (uuc *userUseCase) SearchUser(username string) (domain.User, []domain.User_Posting, int) {
+	searchpro, searchpost := uuc.userData.SearchUserData(username)
 
 	// if err != nil {
 	// 	log.Println("There is an error in internal server")
 	// 	return domain.User{}, 500
 	// }
-	if search.ID == 0 {
-		log.Println("Data not found")
-		return domain.User{}, 404
+	if username == "" {
+		return domain.User{}, []domain.User_Posting{}, 404
 	}
 
-	return search, 200
+	if len(searchpost) == 0 {
+		log.Println("Data not found")
+		return domain.User{}, []domain.User_Posting{}, 404
+	}
+
+	return searchpro, searchpost, 200
 }
 
 func (uuc *userUseCase) DeleteUser(id int) int {

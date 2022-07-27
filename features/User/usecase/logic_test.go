@@ -113,66 +113,64 @@ func TestUpdateUser(t *testing.T) {
 	})
 }
 
-func TestSearchUser(t *testing.T) {
+//func TestSearchUser(t *testing.T) {
+// repo := new(mocks.UserData)
+// returnData := domain.User_Posting{UserID: 1, Photoprofile: "vanili.jpg", Firstname: "Vanilia", Lastname: "Nugroho", Username: "vaniliacahya",
+// 	Postid: 1, Photo: "vanilia.jpg", Caption: "apalah"}
+
+// returnData2 := domain.User_Posting{UserID: 0, Photoprofile: "", Firstname: "", Lastname: "", Username: "",
+// 	Postid: 0, Photo: "", Caption: ""}
+
+// t.Run("Succes get user", func(t *testing.T) {
+// 	repo.On("SearchUserData", mock.Anything).Return(returnData, nil).Once()
+// 	usecase := New(repo, validator.New())
+// 	search, res := usecase.SearchUser("vaniliacahya")
+
+// 	assert.Equal(t, 200, res)
+// 	assert.Greater(t, search.UserID, 0)
+// 	assert.Equal(t, "vanili.jpg", search.Photoprofile)
+// 	assert.Equal(t, "Vanilia", search.Firstname)
+// 	assert.Equal(t, "Nugroho", search.Lastname)
+// 	assert.Equal(t, 1, search.Postid)
+// 	assert.Equal(t, "vanilia.jpg", search.Photo)
+// 	assert.Equal(t, "apalah", search.Caption)
+// 	repo.AssertExpectations(t)
+// })
+
+// t.Run("No data found", func(t *testing.T) {
+// 	repo.On("SearchUserData", mock.Anything).Return(returnData2)
+// 	usecase := New(repo, validator.New())
+// 	search, res := usecase.SearchUser("vanilii")
+// 	assert.Equal(t, 404, res)
+// 	assert.Greater(t, search.UserID, 0)
+// 	assert.Equal(t, "", search.Photoprofile)
+// 	assert.Equal(t, "", search.Firstname)
+// 	assert.Equal(t, "", search.Lastname)
+// 	assert.Equal(t, 0, search.Postid)
+// 	assert.Equal(t, "", search.Photo)
+// 	assert.Equal(t, "", search.Caption)
+// 	repo.AssertExpectations(t)
+//})
+//}
+
+func TestDeleteUser(t *testing.T) {
 	repo := new(mocks.UserData)
-	returnData := domain.User{ID: 1, Firstname: "Vanilia", Lastname: "Nugroho", Username: "vaniliacahya",
-		Email: "vanili@vanili", Password: "vanili123", Birthdate: "2022-07-20", Photoprofile: "vanili.jpg"}
 
-	returnData2 := domain.User{ID: 0, Firstname: "", Lastname: "", Username: "",
-		Email: "", Password: "", Birthdate: "", Photoprofile: ""}
-
-	t.Run("Succes get user", func(t *testing.T) {
-		repo.On("SearchUserData", mock.Anything).Return(returnData, nil).Once()
+	t.Run("Succes delete", func(t *testing.T) {
+		repo.On("DeleteUserData", mock.Anything).Return(true, nil).Once()
 		usecase := New(repo, validator.New())
-		search, res := usecase.SearchUser("vaniliacahya")
+		delete := usecase.DeleteUser(1)
 
-		assert.Equal(t, 200, res)
-		assert.Greater(t, search.ID, 0)
-		assert.Equal(t, "Vanilia", search.Firstname)
-		assert.Equal(t, "Nugroho", search.Lastname)
-		assert.Equal(t, "vaniliacahya", search.Username)
-		assert.Equal(t, "vanili@vanili", search.Email)
-		assert.Equal(t, "vanili123", search.Password)
-		assert.Equal(t, "2022-07-20", search.Birthdate)
-		assert.Equal(t, "vanili.jpg", search.Photoprofile)
+		assert.Equal(t, 200, delete)
 		repo.AssertExpectations(t)
 	})
 
-	t.Run("No data found", func(t *testing.T) {
-		repo.On("SearchUserData", mock.Anything).Return(returnData2)
+	t.Run("No Data Found", func(t *testing.T) {
+		repo.On("DeleteUserData", mock.Anything).Return(false).Once()
 		usecase := New(repo, validator.New())
-		search, res := usecase.SearchUser("vanilii")
-		assert.Equal(t, 404, res)
-		assert.Equal(t, 0, search.ID)
-		assert.Equal(t, "", search.Firstname)
-		assert.Equal(t, "", search.Lastname)
-		assert.Equal(t, "", search.Username)
-		assert.Equal(t, "", search.Email)
-		assert.Equal(t, "", search.Password)
-		assert.Equal(t, "", search.Birthdate)
-		assert.Equal(t, "", search.Photoprofile)
+		delete := usecase.DeleteUser(100)
+
+		assert.Equal(t, 404, delete)
 		repo.AssertExpectations(t)
 	})
 }
-
-// func TestDeleteUser(t *testing.T) {
-// 	repo := new(mocks.UserData)
-
-// 	t.Run("Succes delete", func(t *testing.T) {
-// 		repo.On("DeleteUserData", mock.Anything).Return(true, nil).Once()
-// 		usecase := New(repo, validator.New())
-// 		delete := usecase.DeleteUser(1)
-
-// 		assert.Equal(t, 200, delete)
-// 		repo.AssertExpectations(t)
-// 	})
-
-// 	t.Run("No Data Found", func(t *testing.T) {
-// 		repo.On("DeleteUserData", mock.Anything).Return(false, ).Once()
-// 		usecase := New(repo, validator.New())
-// 		delete := usecase.DeleteUser(100)
-
-// 		assert.Equal(t, 404, delete)
-// 		repo.AssertExpectations(t)
-// 	})
-// }

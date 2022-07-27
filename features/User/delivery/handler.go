@@ -114,7 +114,7 @@ func (uh *userHandler) Update() echo.HandlerFunc {
 func (uh *userHandler) Search() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		cnv := c.Param("username")
-		data, status := uh.useUsecase.SearchUser(cnv)
+		profile, posting, status := uh.useUsecase.SearchUser(cnv)
 
 		if status == 404 {
 			return c.JSON(http.StatusNotFound, map[string]interface{}{
@@ -131,10 +131,11 @@ func (uh *userHandler) Search() echo.HandlerFunc {
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"photoprofile": data.Photoprofile,
-			"firstname":    data.Firstname,
-			"lastname":     data.Lastname,
-			"username":     data.Username,
+			"photoprofile": profile.Photoprofile,
+			"firstname":    profile.Firstname,
+			"lastname":     profile.Lastname,
+			"username":     profile.Username,
+			"posts":        posting,
 			"code":         status,
 			"message":      "get data success",
 		})

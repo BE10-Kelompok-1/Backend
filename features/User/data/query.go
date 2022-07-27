@@ -2,6 +2,7 @@ package data
 
 import (
 	"backend/domain"
+	"fmt"
 	"log"
 
 	"gorm.io/gorm"
@@ -53,14 +54,23 @@ func (ud *userData) UpdateUserData(newuser domain.User) domain.User {
 	return user.ToModel()
 }
 
-func (ud *userData) SearchUserData(username string) domain.User {
+func (ud *userData) SearchUserData(username string) (domain.User, []domain.User_Posting) {
 	var tmp User
 	err := ud.db.Where("username = ?", username).First(&tmp).Error
 	if err != nil {
 		log.Println("There is problem with data", err.Error())
-		return domain.User{}
+		return domain.User{}, []domain.User_Posting{}
 	}
-	return tmp.ToModel()
+
+	var tmp2 []User_Posting
+	err2 := ud.db.Model(&User{}).Select("users.username, posts.id, posts.photo, posts.caption, posts.created_at").
+		Joins("left join posts on posts.userid = users.ID").Where("users.username = ?", username).Scan(&tmp2).Error
+	if err2 != nil {
+		log.Println("There is problem with data", err.Error())
+		return domain.User{}, []domain.User_Posting{}
+	}
+	fmt.Println(tmp2)
+	return tmp.ToModel(), ParseToArr2(tmp2)
 }
 
 func (ud *userData) DeleteUserData(userid int) bool {
