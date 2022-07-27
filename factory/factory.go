@@ -8,12 +8,22 @@ import (
 	ud "backend/features/User/data"
 	udeli "backend/features/User/delivery"
 	uc "backend/features/User/usecase"
+
+	pd "backend/features/Post/data"
+	pdeli "backend/features/Post/delivery"
+	pc "backend/features/Post/usecase"
 )
 
 func InitFactory(e *echo.Echo, db *gorm.DB) {
-	userData := ud.New(db)
 	validator := validator.New()
+
+	userData := ud.New(db)
 	userCase := uc.New(userData, validator)
 	userHandler := udeli.New(userCase)
 	udeli.RouteUser(e, userHandler)
+
+	postData := pd.New(db)
+	postCase := pc.New(postData, validator)
+	postHandler := pdeli.New(postCase)
+	pdeli.RoutePost(e, postHandler)
 }

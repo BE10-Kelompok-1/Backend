@@ -24,6 +24,6 @@ type PostUseCase interface {
 }
 
 type PostData interface {
-	CreatePostData(newpost Post) User
-	UpdatePostData(newpost Post) User
+	CreatePostData(newpost Post) Post
+	UpdatePostData(newpost Post) Post
 }

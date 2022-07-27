@@ -50,7 +50,7 @@ func (uuc *userUseCase) RegisterUser(newuser domain.User, cost int) int {
 	validError := uuc.validate.Struct(user)
 
 	if validError != nil {
-		log.Println("Validation errror : ", validError.Error())
+		log.Println("Validation errror : ", validError)
 		return 400
 	}
 
