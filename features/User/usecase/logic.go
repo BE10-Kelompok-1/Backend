@@ -147,12 +147,12 @@ func (uuc *userUseCase) LoginUser(userdata domain.User) (domain.User, error) {
 	return login, nil
 }
 
-func (uuc *userUseCase) ProfileUser(userid int) (domain.User, error) {
-	get := uuc.userData.ProfileUserData(userid)
+// func (uuc *userUseCase) ProfileUser(userid int) (domain.User, error) {
+// 	get := uuc.userData.ProfileUserData(userid)
 
-	if get.ID == 0 {
-		return domain.User{}, errors.New("no data")
-	}
+// 	if get.ID == 0 {
+// 		return domain.User{}, errors.New("no data")
+// 	}
 
-	return get, nil
-}
+// 	return get, nil
+// }

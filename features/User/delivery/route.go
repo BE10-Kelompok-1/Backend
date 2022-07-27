@@ -24,5 +24,5 @@ func RouteUser(e *echo.Echo, uh domain.UserHandler) {
 	user.POST("", uh.Register())
 	user.PUT("", uh.Update(), middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET))))
 	e.POST("/login", uh.Login())
-	user.GET("", uh.Profile(), middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET))))
+	//user.GET("", uh.Profile(), middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET))))
 }
