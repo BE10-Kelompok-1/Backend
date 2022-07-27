@@ -23,6 +23,8 @@ type User_Posting struct {
 	Photo     string
 	Caption   string
 	CreatedAt time.Time
+	Posts     []Post
+	Comments  []Comment
 }
 
 type UserHandler interface {

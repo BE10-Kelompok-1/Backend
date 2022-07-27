@@ -12,6 +12,7 @@ type Post struct {
 	Photo     string
 	Caption   string
 	CreatedAt time.Time
+	Comments  []Comment
 }
 
 type PostHandler interface {

@@ -2,15 +2,17 @@ package data
 
 import (
 	"backend/domain"
+	"backend/features/Comment/data"
 
 	"gorm.io/gorm"
 )
 
 type Post struct {
 	gorm.Model
-	Userid  int
-	Photo   string `json:"photo"`
-	Caption string `json:"caption" validate:"required"`
+	Userid   int
+	Photo    string         `json:"photo" form:"photo"`
+	Caption  string         `json:"caption" form:"caption" validate:"required"`
+	Comments []data.Comment `gorm:"foreignKey:Postid"`
 }
 
 func (p *Post) ToModel() domain.Post {
