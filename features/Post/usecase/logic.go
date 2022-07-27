@@ -47,10 +47,6 @@ func (puc *postUsecase) CreatePost(newpost domain.Post, userid int) int {
 }
 
 // UpdatePost implements domain.PostUseCase
-<<<<<<< HEAD
-func (puc *postUsecase) UpdatePost(newpost domain.Post, userid int) int {
-	panic("unimplemented")
-=======
 func (puc *postUsecase) UpdatePost(newpost domain.Post, postid int) int {
 	var post = data.FromModel(newpost)
 	validError := puc.validate.Struct(post)
@@ -68,5 +64,4 @@ func (puc *postUsecase) UpdatePost(newpost domain.Post, postid int) int {
 	}
 
 	return 200
->>>>>>> 080a0f7 (minor update difitur updatepost)
 }
