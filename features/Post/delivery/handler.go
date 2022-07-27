@@ -29,7 +29,7 @@ func (ph *postHandler) Create() echo.HandlerFunc {
 		if bind != nil {
 			log.Println("cant bind")
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"code":    500,
+				"code":    400,
 				"message": "There is an error in internal server",
 			})
 		}
@@ -68,18 +68,19 @@ func (ph *postHandler) Create() echo.HandlerFunc {
 func (ph *postHandler) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var newpost PostFormat
-		id := 1
+		postid := 1
+		userid := common.ExtractData(c)
 		bind := c.Bind(&newpost)
 
 		if bind != nil {
 			log.Println("cant bind")
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"code":    500,
+				"code":    400,
 				"message": "There is an error in internal server",
 			})
 		}
 
-		status := ph.postUseCase.UpdatePost(newpost.ToModel(), id)
+		status := ph.postUseCase.UpdatePost(newpost.ToModel(), postid, userid)
 
 		if status == 400 {
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{

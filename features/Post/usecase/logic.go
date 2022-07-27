@@ -22,12 +22,6 @@ func New(pd domain.PostData, v *validator.Validate) domain.PostUseCase {
 
 // CreatePost implements domain.PostUseCase
 func (puc *postUsecase) CreatePost(newpost domain.Post, userid int) int {
-
-	if userid == 0 {
-		log.Println("Must login first")
-		return 404
-	}
-
 	var post = data.FromModel(newpost)
 	validError := puc.validate.Struct(post)
 
@@ -36,6 +30,7 @@ func (puc *postUsecase) CreatePost(newpost domain.Post, userid int) int {
 		return 400
 	}
 
+	post.Userid = userid
 	create := puc.postData.CreatePostData(post.ToModel())
 
 	if create.ID == 0 {
@@ -47,7 +42,7 @@ func (puc *postUsecase) CreatePost(newpost domain.Post, userid int) int {
 }
 
 // UpdatePost implements domain.PostUseCase
-func (puc *postUsecase) UpdatePost(newpost domain.Post, postid int) int {
+func (puc *postUsecase) UpdatePost(newpost domain.Post, postid, userid int) int {
 	var post = data.FromModel(newpost)
 	validError := puc.validate.Struct(post)
 
@@ -56,6 +51,7 @@ func (puc *postUsecase) UpdatePost(newpost domain.Post, postid int) int {
 		return 400
 	}
 	post.ID = uint(postid)
+	post.Userid = userid
 	update := puc.postData.UpdatePostData(post.ToModel())
 
 	if update.ID == 0 {
