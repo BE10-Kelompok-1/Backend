@@ -229,7 +229,9 @@ func (uh *userHandler) Profile() echo.HandlerFunc {
 				"firstname":  result.Firstname,
 				"lastname":   result.Lastname,
 				"username":   result.Username,
-				"posts":      domain.Post{},
+				"posts":[{
+					"postid": 
+				}],
 			},
 		})
 	}
