@@ -66,9 +66,6 @@ func (ph *postHandler) Create() echo.HandlerFunc {
 
 // Update implements domain.PostHandler
 func (ph *postHandler) Update() echo.HandlerFunc {
-<<<<<<< HEAD
-	panic("unimplemented")
-=======
 	return func(c echo.Context) error {
 		var newpost PostFormat
 		id := 1
@@ -103,5 +100,4 @@ func (ph *postHandler) Update() echo.HandlerFunc {
 			"message": "Update success",
 		})
 	}
->>>>>>> 080a0f7 (minor update difitur updatepost)
 }
