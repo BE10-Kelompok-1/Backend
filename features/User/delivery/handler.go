@@ -29,7 +29,7 @@ func (uh *userHandler) Register() echo.HandlerFunc {
 		if bind != nil {
 			log.Println("cant bind")
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"code":    500,
+				"code":    400,
 				"message": "There is an error in internal server",
 			})
 		}
@@ -76,7 +76,7 @@ func (uh *userHandler) Update() echo.HandlerFunc {
 		if bind != nil {
 			log.Println("cant bind")
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"code":    500,
+				"code":    400,
 				"message": "There is an error in internal server",
 			})
 		}
