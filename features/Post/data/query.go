@@ -32,9 +32,6 @@ func (pd *postData) CreatePostData(newpost domain.Post) domain.Post {
 
 // UpdatePostData implements domain.PostData
 func (pd *postData) UpdatePostData(newpost domain.Post) domain.Post {
-<<<<<<< HEAD
-	panic("unimplemented")
-=======
 	var post = FromModel(newpost)
 	err := pd.db.Model(&Post{}).Where("ID = ? AND Userid = ?", post.ID, post.Userid).Updates(post)
 
@@ -49,5 +46,4 @@ func (pd *postData) UpdatePostData(newpost domain.Post) domain.Post {
 	}
 
 	return post.ToModel()
->>>>>>> 74977e0 (tambah relasi data antar entity)
 }
