@@ -4,8 +4,8 @@ import "backend/domain"
 
 type PostFormat struct {
 	Userid  int
-	Photo   string `json:"Photo"`
-	Caption string `json:"Caption" validate:"required"`
+	Photo   string `json:"photo" form:"photo"`
+	Caption string `json:"caption" form:"caption" validate:"required"`
 }
 
 func (i *PostFormat) ToModel() domain.Post {
