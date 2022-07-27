@@ -1,20 +1,24 @@
 package data
 
 import (
+	// "backend/domain"
+
 	"backend/domain"
+	"backend/features/Post/data"
 
 	"gorm.io/gorm"
 )
 
 type User struct {
 	gorm.Model
-	Firstname    string `json:"firstname" validate:"required"`
-	Lastname     string `json:"lastname" validate:"required"`
-	Username     string `json:"username" validate:"required"`
-	Email        string `json:"email" validate:"required,email"`
-	Password     string `json:"password" validate:"required"`
-	Birthdate    string `json:"birthdate" validate:"required"`
-	Photoprofile string `json:"photoprofile"`
+	Firstname    string      `json:"firstname" validate:"required"`
+	Lastname     string      `json:"lastname" validate:"required"`
+	Username     string      `json:"username" validate:"required"`
+	Email        string      `json:"email" validate:"required,email"`
+	Password     string      `json:"password" validate:"required"`
+	Birthdate    string      `json:"birthdate" validate:"required"`
+	Photoprofile string      `json:"photoprofile"`
+	Posts        []data.Post `gorm:"foreignKey:Userid"`
 }
 
 func (u *User) ToModel() domain.User {

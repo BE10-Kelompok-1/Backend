@@ -27,8 +27,8 @@ func (i *UserFormat) ToModel() domain.User {
 }
 
 type LoginFormat struct {
-	Username string `json: "username"`
-	Password string `json: "password`
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 func (i *LoginFormat) ToModelLogin() domain.User {

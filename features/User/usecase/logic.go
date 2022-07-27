@@ -50,7 +50,14 @@ func (uuc *userUseCase) RegisterUser(newuser domain.User, cost int) int {
 	validError := uuc.validate.Struct(user)
 
 	if validError != nil {
-		log.Println("Validation errror : ", validError.Error())
+		log.Println("Validation errror : ", validError)
+		return 400
+	}
+
+	duplicate := uuc.userData.CheckDuplicate(user.ToModel())
+
+	if duplicate {
+		log.Println("Duplicate Data")
 		return 400
 	}
 
@@ -76,8 +83,20 @@ func (uuc *userUseCase) UpdateUser(newuser domain.User, userid int, cost int) in
 	var user = data.FromModel(newuser)
 	validError := uuc.validate.Struct(user)
 
+	if userid == 0 {
+		log.Println("Data not found")
+		return 404
+	}
+
 	if validError != nil {
 		log.Println("Validation errror : ", validError.Error())
+		return 400
+	}
+
+	duplicate := uuc.userData.CheckDuplicate(user.ToModel())
+
+	if duplicate {
+		log.Println("Duplicate Data")
 		return 400
 	}
 
@@ -91,12 +110,7 @@ func (uuc *userUseCase) UpdateUser(newuser domain.User, userid int, cost int) in
 	user.ID = uint(userid)
 	user.Password = string(hashed)
 
-	update := uuc.userData.UpdateUserData(user.ToModel())
-
-	if update.ID == 0 {
-		log.Println("Data not found")
-		return 404
-	}
+	uuc.userData.UpdateUserData(user.ToModel())
 
 	return 200
 }
@@ -118,4 +132,14 @@ func (uuc *userUseCase) LoginUser(userdata domain.User) (domain.User, error) {
 	}
 
 	return login, nil
+}
+
+func (uuc *userUseCase) ProfileUser(userid int) (domain.User, error) {
+	get := uuc.userData.ProfileUserData(userid)
+
+	if get.ID == 0 {
+		return domain.User{}, errors.New("no data")
+	}
+
+	return get, nil
 }

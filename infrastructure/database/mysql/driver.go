@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"backend/config"
+	postdata "backend/features/Post/data"
 	userdata "backend/features/User/data"
 	"fmt"
 	"log"
@@ -22,5 +23,5 @@ func InitDB(cfg *config.AppConfig) *gorm.DB {
 }
 
 func MigrateData(db *gorm.DB) {
-	db.AutoMigrate(userdata.User{})
+	db.AutoMigrate(userdata.User{}, postdata.Post{})
 }
