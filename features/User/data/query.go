@@ -114,3 +114,15 @@ func (ud *userData) LoginData(userdata domain.User) domain.User {
 	return user.ToModel()
 
 }
+
+func (ud *userData) ProfileUserData(userid int) domain.User {
+	var user User
+	err := ud.db.Find(&user, "ID = ?", userid).Error
+
+	if err != nil {
+		log.Println("Cant retrieve user dara", err.Error())
+		return domain.User{}
+	}
+
+	return user.ToModel()
+}
