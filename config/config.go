@@ -39,7 +39,7 @@ func initConfig() *AppConfig {
 	// 	return nil
 	// }
 	SECRET = os.Getenv("SECRET")
-	cnv, err := strconv.Atoi(os.Getenv("SERVERPORT"))
+	cnv, err := strconv.Atoi("80")
 	if err != nil {
 		log.Fatal("Cannot parse port variable")
 		return nil
