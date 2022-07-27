@@ -224,7 +224,12 @@ func (uh *userHandler) Profile() echo.HandlerFunc {
 			"code":    200,
 			"message": "success",
 			"data": map[string]interface{}{
-				"ID": result.ID,
+				"id":         result.ID,
+				"fotoprofil": result.Photoprofile,
+				"firstname":  result.Firstname,
+				"lastname":   result.Lastname,
+				"username":   result.Username,
+				"posts":      domain.Post{},
 			},
 		})
 	}
