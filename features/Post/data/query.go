@@ -32,18 +32,5 @@ func (pd *postData) CreatePostData(newpost domain.Post) domain.Post {
 
 // UpdatePostData implements domain.PostData
 func (pd *postData) UpdatePostData(newpost domain.Post) domain.Post {
-	var post = FromModel(newpost)
-	err := pd.db.Model(&Post{}).Where("ID = ?", post.ID).Updates(post)
-
-	if err.Error != nil {
-		log.Println("Cant update post object", err.Error.Error())
-		return domain.Post{}
-	}
-
-	if err.RowsAffected == 0 {
-		log.Println("Data Not Found")
-		return domain.Post{}
-	}
-
-	return post.ToModel()
+	panic("unimplemented")
 }
