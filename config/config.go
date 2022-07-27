@@ -5,8 +5,6 @@ import (
 	"os"
 	"strconv"
 	"sync"
-
-	"github.com/joho/godotenv"
 )
 
 type AppConfig struct {
@@ -34,12 +32,12 @@ func GetConfig() *AppConfig {
 
 func initConfig() *AppConfig {
 	var defaultConfig AppConfig
-	err := godotenv.Load("local.env")
+	// err := godotenv.Load("local.env")
 	//!! USE "source local.env"!!!!!!!!!!!!!!!
-	if err != nil {
-		log.Fatal("Cannot read configuration")
-		return nil
-	}
+	// if err != nil {
+	// 	log.Fatal("Cannot read configuration")
+	// 	return nil
+	// }
 	SECRET = os.Getenv("SECRET")
 	cnv, err := strconv.Atoi(os.Getenv("SERVERPORT"))
 	if err != nil {
@@ -48,10 +46,10 @@ func initConfig() *AppConfig {
 	}
 
 	SERVERPORT = int16(cnv)
-	defaultConfig.Name = os.Getenv("Name")
-	defaultConfig.Username = os.Getenv("Username")
-	defaultConfig.Password = os.Getenv("Password")
-	defaultConfig.Address = os.Getenv("Address")
+	defaultConfig.Name = os.Getenv("NAME")
+	defaultConfig.Username = os.Getenv("USERNAME")
+	defaultConfig.Password = os.Getenv("PASSWORD")
+	defaultConfig.Address = os.Getenv("ADDRESS")
 	cnv, err = strconv.Atoi(os.Getenv("DB_PORT"))
 	if err != nil {
 		log.Fatal("Cannot parse DB Port variable")
