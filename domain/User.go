@@ -15,7 +15,6 @@ type User struct {
 	Password     string
 	Birthdate    string
 	Photoprofile string
-	Posts        []Post
 }
 
 type User_Posting struct {
