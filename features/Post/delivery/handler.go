@@ -5,6 +5,7 @@ import (
 	"backend/features/common"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
@@ -68,7 +69,16 @@ func (ph *postHandler) Create() echo.HandlerFunc {
 func (ph *postHandler) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var newpost PostFormat
-		postid := 1
+		postid := c.Param("postid")
+		cnv, err := strconv.Atoi(postid)
+
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    400,
+				"message": "Wrong input",
+			})
+		}
+
 		userid := common.ExtractData(c)
 		bind := c.Bind(&newpost)
 
@@ -80,7 +90,7 @@ func (ph *postHandler) Update() echo.HandlerFunc {
 			})
 		}
 
-		status := ph.postUseCase.UpdatePost(newpost.ToModel(), postid, userid)
+		status := ph.postUseCase.UpdatePost(newpost.ToModel(), cnv, userid)
 
 		if status == 400 {
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
