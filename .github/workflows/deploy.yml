@@ -27,7 +27,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: rafkimaisya/be10appg1:latest
+          tags: rafkimaisya/appg1be10:latest
           
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@master
