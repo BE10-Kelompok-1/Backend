@@ -28,8 +28,8 @@ func (ph *postHandler) Create() echo.HandlerFunc {
 
 		if bind != nil {
 			log.Println("cant bind")
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"code":    400,
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    500,
 				"message": "There is an error in internal server",
 			})
 		}
@@ -74,8 +74,8 @@ func (ph *postHandler) Update() echo.HandlerFunc {
 
 		if bind != nil {
 			log.Println("cant bind")
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"code":    400,
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    500,
 				"message": "There is an error in internal server",
 			})
 		}
