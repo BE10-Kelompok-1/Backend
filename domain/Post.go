@@ -8,6 +8,7 @@ import (
 
 type Post struct {
 	ID        int
+	Userid    int
 	Photo     string
 	Caption   string
 	CreatedAt time.Time

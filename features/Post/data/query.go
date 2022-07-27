@@ -18,13 +18,34 @@ func New(db *gorm.DB) domain.PostData {
 }
 
 // CreatePostData implements domain.PostData
-func (pd *postData) CreatePostData(newpost domain.Post) domain.User {
-	panic("unimplemented")
+func (pd *postData) CreatePostData(newpost domain.Post) domain.Post {
+	var post = FromModel(newpost)
+	err := pd.db.Create(&post)
+
+	if err.Error != nil {
+		log.Println("Cant create user object", err.Error)
+		return domain.Post{}
+	}
+
+	return post.ToModel()
 }
 
 // UpdatePostData implements domain.PostData
-func (pd *postData) UpdatePostData(newpost domain.Post) domain.User {
-	panic("unimplemented")
+func (pd *postData) UpdatePostData(newpost domain.Post) domain.Post {
+	var post = FromModel(newpost)
+	err := pd.db.Model(&Post{}).Where("ID = ? AND Userid = ?", post.ID, post.Userid).Updates(post)
+
+	if err.Error != nil {
+		log.Println("Cant update post object", err.Error.Error())
+		return domain.Post{}
+	}
+
+	if err.RowsAffected == 0 {
+		log.Println("Data Not Found")
+		return domain.Post{}
+	}
+
+	return post.ToModel()
 }
 
 func (pd *postData) ReadAllPostData() []domain.Post {

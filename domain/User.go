@@ -13,6 +13,7 @@ type User struct {
 	Password     string
 	Birthdate    string
 	Photoprofile string
+	Posts        []Post
 }
 
 type UserHandler interface {
