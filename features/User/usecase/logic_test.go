@@ -32,6 +32,7 @@ func TestInsertUser(t *testing.T) {
 
 	t.Run("Success insert data", func(t *testing.T) {
 		// useCase := New(&mockUserDataTrue{})
+		repo.On("CheckDuplicate", mock.Anything).Return(false).Once()
 		repo.On("RegisterData", mock.Anything).Return(returnData).Once()
 		useCase := New(repo, validator.New())
 		res := useCase.RegisterUser(mockData, cost)
@@ -49,6 +50,7 @@ func TestInsertUser(t *testing.T) {
 	})
 
 	t.Run("Generate Hash Error", func(t *testing.T) {
+		repo.On("CheckDuplicate", mock.Anything).Return(false).Once()
 		useCase := New(repo, validator.New())
 		res := useCase.RegisterUser(mockData, 40)
 
@@ -57,11 +59,21 @@ func TestInsertUser(t *testing.T) {
 	})
 
 	t.Run("Data Not Found", func(t *testing.T) {
+		repo.On("CheckDuplicate", mock.Anything).Return(false).Once()
 		repo.On("RegisterData", mock.Anything).Return(emptyMockData).Once()
 		useCase := New(repo, validator.New())
 		res := useCase.RegisterUser(noData, cost)
 
 		assert.Equal(t, 404, res)
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("Duplicate Data", func(t *testing.T) {
+		repo.On("CheckDuplicate", mock.Anything).Return(true).Once()
+		useCase := New(repo, validator.New())
+		res := useCase.RegisterUser(mockData, cost)
+
+		assert.Equal(t, 400, res)
 		repo.AssertExpectations(t)
 	})
 }
@@ -80,6 +92,7 @@ func TestUpdateUser(t *testing.T) {
 	invalidData.Firstname = ""
 
 	t.Run("Success Update", func(t *testing.T) {
+		repo.On("CheckDuplicate", mock.Anything).Return(false).Once()
 		repo.On("UpdateUserData", mock.Anything).Return(returnData).Once()
 		useCase := New(repo, validator.New())
 		res := useCase.UpdateUser(mockData, 1, cost)
@@ -105,10 +118,20 @@ func TestUpdateUser(t *testing.T) {
 	})
 
 	t.Run("Generate Hash Error", func(t *testing.T) {
+		repo.On("CheckDuplicate", mock.Anything).Return(false).Once()
 		useCase := New(repo, validator.New())
 		res := useCase.UpdateUser(mockData, 1, 40)
 
 		assert.Equal(t, 500, res)
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("Duplicate Data", func(t *testing.T) {
+		repo.On("CheckDuplicate", mock.Anything).Return(true).Once()
+		useCase := New(repo, validator.New())
+		res := useCase.RegisterUser(mockData, cost)
+
+		assert.Equal(t, 400, res)
 		repo.AssertExpectations(t)
 	})
 }

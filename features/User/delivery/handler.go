@@ -28,8 +28,8 @@ func (uh *userHandler) Register() echo.HandlerFunc {
 
 		if bind != nil {
 			log.Println("cant bind")
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"code":    400,
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    500,
 				"message": "There is an error in internal server",
 			})
 		}
@@ -75,8 +75,8 @@ func (uh *userHandler) Update() echo.HandlerFunc {
 
 		if bind != nil {
 			log.Println("cant bind")
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"code":    400,
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    500,
 				"message": "There is an error in internal server",
 			})
 		}
@@ -200,4 +200,39 @@ func (uh *userHandler) Login() echo.HandlerFunc {
 			"token":   token,
 		})
 	}
+}
+
+func (uh *userHandler) Profile() echo.HandlerFunc {
+	return func(c echo.Context) error {
+
+		idToken := common.ExtractData(c)
+		if idToken == 0 {
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"code":    400,
+				"message": "Data not found",
+			})
+		}
+
+		result, err := uh.useUsecase.ProfileUser(idToken)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    500,
+				"message": "There is an error in internal server",
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"code":    200,
+			"message": "success",
+			"data": map[string]interface{}{
+				"id":         result.ID,
+				"fotoprofil": result.Photoprofile,
+				"firstname":  result.Firstname,
+				"lastname":   result.Lastname,
+				"username":   result.Username,
+				"posts":      domain.Post{},
+			},
+		})
+	}
+
 }

@@ -31,6 +31,7 @@ type UserHandler interface {
 	Search() echo.HandlerFunc
 	Delete() echo.HandlerFunc
 	Login() echo.HandlerFunc
+	Profile() echo.HandlerFunc
 }
 
 type UserUseCase interface {
@@ -39,6 +40,7 @@ type UserUseCase interface {
 	SearchUser(username string) (User, []User_Posting, int)
 	DeleteUser(userid int) int
 	LoginUser(userdata User) (User, error)
+	ProfileUser(userid int) (User, error)
 }
 
 type UserData interface {
@@ -48,4 +50,6 @@ type UserData interface {
 	DeleteUserData(userid int) bool
 	LoginData(userdata User) User
 	GetPasswordData(name string) string
+	CheckDuplicate(newuser User) bool
+	ProfileUserData(userid int) User
 }
