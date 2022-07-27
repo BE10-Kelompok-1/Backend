@@ -16,7 +16,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME}}
           key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT}}
+          port: ${{ secrets.APP_PORT}}
           script: |
             cd /home/ubuntu/production
             git pull origin main
