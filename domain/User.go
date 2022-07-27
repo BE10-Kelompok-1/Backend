@@ -39,4 +39,5 @@ type UserData interface {
 	DeleteUserData(userid int) bool
 	LoginData(userdata User) User
 	GetPasswordData(name string) string
+	CheckDuplicate(newuser User) bool
 }

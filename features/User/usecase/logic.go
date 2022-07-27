@@ -54,6 +54,13 @@ func (uuc *userUseCase) RegisterUser(newuser domain.User, cost int) int {
 		return 400
 	}
 
+	duplicate := uuc.userData.CheckDuplicate(user.ToModel())
+
+	if duplicate {
+		log.Println("Duplicate Data")
+		return 400
+	}
+
 	hashed, hasherr := bcrypt.GenerateFromPassword([]byte(user.Password), cost)
 
 	if hasherr != nil {
@@ -83,6 +90,13 @@ func (uuc *userUseCase) UpdateUser(newuser domain.User, userid int, cost int) in
 
 	if validError != nil {
 		log.Println("Validation errror : ", validError.Error())
+		return 400
+	}
+
+	duplicate := uuc.userData.CheckDuplicate(user.ToModel())
+
+	if duplicate {
+		log.Println("Duplicate Data")
 		return 400
 	}
 

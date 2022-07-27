@@ -17,6 +17,19 @@ func New(db *gorm.DB) domain.UserData {
 	}
 }
 
+// CheckDuplicate implements domain.UserData
+func (ud *userData) CheckDuplicate(newuser domain.User) bool {
+	var user User
+	err := ud.db.Find(&user, "username = ? OR email = ?", newuser.Username, newuser.Email)
+
+	if err.RowsAffected == 1 {
+		log.Println("Duplicated data", err.Error)
+		return true
+	}
+
+	return false
+}
+
 // RegisterData implements domain.UserData
 func (ud *userData) RegisterData(newuser domain.User) domain.User {
 	var user = FromModel(newuser)
