@@ -2,6 +2,7 @@ package data
 
 import (
 	"backend/domain"
+	"log"
 
 	"gorm.io/gorm"
 )
@@ -18,5 +19,13 @@ func New(db *gorm.DB) domain.CommentData {
 
 // CreateCommentData implements domain.CommentData
 func (cd *commentData) CreateCommentData(newcomment domain.Comment) domain.Comment {
-	panic("unimplemented")
+	var comment = FromModel(newcomment)
+	err := cd.db.Create(&comment)
+
+	if err.Error != nil {
+		log.Println("Cant create user object", err.Error)
+		return domain.Comment{}
+	}
+
+	return comment.ToModel()
 }
