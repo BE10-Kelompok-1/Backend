@@ -34,7 +34,7 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEYSAYA }}
+          key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
             cd project
