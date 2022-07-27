@@ -9,8 +9,8 @@ import (
 type Post struct {
 	gorm.Model
 	Userid  int
-	Photo   string `json:"photo"`
-	Caption string `json:"caption" validate:"required"`
+	Photo   string `json:"photo" form:"photo"`
+	Caption string `json:"caption" form:"caption" validate:"required"`
 }
 
 func (p *Post) ToModel() domain.Post {
