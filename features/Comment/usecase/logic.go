@@ -2,6 +2,8 @@ package usecase
 
 import (
 	"backend/domain"
+	"backend/features/Comment/data"
+	"log"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -19,6 +21,22 @@ func New(pd domain.CommentData, v *validator.Validate) domain.CommentUseCase {
 }
 
 // CreateComment implements domain.CommentUseCase
-func (*commentUsecase) CreateComment(newcomment domain.Comment, postid int, userid int) int {
-	panic("unimplemented")
+func (cuc *commentUsecase) CreateComment(newcomment domain.Comment, userid int) int {
+	var comment = data.FromModel(newcomment)
+	validError := cuc.validate.Struct(comment)
+
+	if validError != nil {
+		log.Println("Validation errror : ", validError)
+		return 400
+	}
+
+	comment.Userid = userid
+	create := cuc.commentData.CreateCommentData(comment.ToModel())
+
+	if create.ID == 0 {
+		log.Println("error after creating data")
+		return 500
+	}
+
+	return 200
 }

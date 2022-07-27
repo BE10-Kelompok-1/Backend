@@ -14,6 +14,7 @@ type User struct {
 	Birthdate    string
 	Photoprofile string
 	Posts        []Post
+	Comments     []Comment
 }
 
 type UserHandler interface {

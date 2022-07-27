@@ -12,6 +12,10 @@ import (
 	pd "backend/features/Post/data"
 	pdeli "backend/features/Post/delivery"
 	pc "backend/features/Post/usecase"
+
+	cd "backend/features/Comment/data"
+	cdeli "backend/features/Comment/delivery"
+	cc "backend/features/Comment/usecase"
 )
 
 func InitFactory(e *echo.Echo, db *gorm.DB) {
@@ -26,4 +30,9 @@ func InitFactory(e *echo.Echo, db *gorm.DB) {
 	postCase := pc.New(postData, validator)
 	postHandler := pdeli.New(postCase)
 	pdeli.RoutePost(e, postHandler)
+
+	commentData := cd.New(db)
+	commentCase := cc.New(commentData, validator)
+	commentHandler := cdeli.New(commentCase)
+	cdeli.RouteComment(e, commentHandler)
 }

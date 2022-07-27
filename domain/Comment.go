@@ -16,7 +16,7 @@ type CommentHandler interface {
 }
 
 type CommentUseCase interface {
-	CreateComment(newcomment Comment, postid, userid int) int
+	CreateComment(newcomment Comment, userid int) int
 }
 
 type CommentData interface {

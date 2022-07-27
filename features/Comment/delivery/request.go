@@ -4,7 +4,7 @@ import "backend/domain"
 
 type CommentFormat struct {
 	Userid  int
-	Postid  int
+	Postid  int    `json:"postid" form:"postid" validate:"required"`
 	Comment string `json:"comment" form:"comment" validate:"required"`
 }
 
