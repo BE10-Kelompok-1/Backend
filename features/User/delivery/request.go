@@ -5,13 +5,13 @@ import (
 )
 
 type UserFormat struct {
-	Firstname    string `json:"firstname" validate:"required"`
-	Lastname     string `json:"lastname" validate:"required"`
-	Username     string `json:"username" validate:"required"`
-	Email        string `json:"email" validate:"required,email"`
-	Password     string `json:"password" validate:"required"`
-	Birthdate    string `json:"birthdate" validate:"required"`
-	Photoprofile string `json:"photoprofile"`
+	Firstname    string `json:"firstname" form:"firstname" validate:"required"`
+	Lastname     string `json:"lastname" form:"lastname" validate:"required"`
+	Username     string `json:"username" form:"username" validate:"required"`
+	Email        string `json:"email" form:"email" validate:"required,email"`
+	Password     string `json:"password" form:"password" validate:"required"`
+	Birthdate    string `json:"birthdate" form:"birthdate" validate:"required"`
+	Photoprofile string `json:"photoprofile" form:"photoprofile"`
 }
 
 func (i *UserFormat) ToModel() domain.User {
