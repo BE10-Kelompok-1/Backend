@@ -1,6 +1,8 @@
 package domain
 
 import (
+	"time"
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -17,21 +19,12 @@ type User struct {
 	Comments     []Comment
 }
 
-// type UserPosting struct {
-// 	PostID    int
-// 	Photo     string
-// 	Caption   string
-// 	CreatedAt time.Time
-// }
-
-// type UserPostingComment struct {
-// 	CommentID    int
-// 	Firstname    string
-// 	Lastname     string
-// 	Photoprofile string
-// 	Comment      string
-// 	CreatedAt    time.Time
-// }
+type UserPosting struct {
+	ID        int
+	Photo     string
+	Caption   string
+	CreatedAt time.Time
+}
 
 type UserHandler interface {
 	Register() echo.HandlerFunc
@@ -45,7 +38,7 @@ type UserHandler interface {
 type UserUseCase interface {
 	RegisterUser(newuser User, cost int) int
 	UpdateUser(newuser User, userid, cost int) int
-	SearchUser(username string) (User, int)
+	SearchUser(username string) (User, []UserPosting, []CommentUser, int)
 	DeleteUser(userid int) int
 	LoginUser(userdata User) (User, error)
 	ProfileUser(userid int) (User, error)
@@ -59,7 +52,7 @@ type UserData interface {
 	LoginData(userdata User) User
 	GetPasswordData(name string) string
 	CheckDuplicate(newuser User) bool
-	// SearchUserPostingData(username string) []User
-	// SearchUserPostingCommentData(username string) []User
+	SearchUserPostingData(username string) []UserPosting
+	SearchUserPostingCommentData(username string) []CommentUser
 	ProfileUserData(userid int) User
 }

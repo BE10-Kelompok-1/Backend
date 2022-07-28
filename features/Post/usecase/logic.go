@@ -73,13 +73,3 @@ func (puc *postUsecase) ReadAllPost() ([]domain.PostComent, []domain.CommentUser
 
 	return reads, readcom, 200
 }
-
-func (puc *postUsecase) ReadMyPost(userid int) ([]domain.Post, int) {
-	read := puc.postData.ReadMyPostData(userid)
-
-	if len(read) == 0 {
-		return nil, 404
-	}
-
-	return read, 200
-}

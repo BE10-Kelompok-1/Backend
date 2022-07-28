@@ -2,6 +2,7 @@ package data
 
 import (
 	"backend/domain"
+	"backend/features/Post/data"
 	"fmt"
 	"log"
 
@@ -129,22 +130,32 @@ func (ud *userData) ProfileUserData(userid int) domain.User {
 	return user.ToModel()
 }
 
-// func (ud *userData) SearchUserPostingData(username string) []domain.UserPosting {
-// 	var tmp []UserPosting
-// 	err := ud.db.Model(&User{}).Select("users.ID, posts.ID, posts.photo, posts.caption, posts.created_at").Joins("left join posts on posts.userid = users.id").Where("users.username = ?", username).Find(&tmp).Error
-// 	if err != nil {
-// 		log.Println("There is problem with data", err.Error())
-// 		return nil
-// 	}
-// 	return ParseUserPostingToArr(tmp)
-// }
+func (ud *userData) SearchUserPostingData(username string) []domain.UserPosting {
+	var tmp []UserPosting
+	err := ud.db.Model(&User{}).Order("posts.id DESC").Select("users.ID, posts.ID, posts.photo, posts.caption, posts.created_at").
+		Joins("left join posts on posts.userid = users.id").Where("users.username = ?", username).Find(&tmp).Limit(50).Error
+	if err != nil {
+		log.Println("There is problem with data", err.Error())
+		return nil
+	}
+	return ParseUserPostingToArr(tmp)
+}
 
-// func (ud *userData) SearchUserPostingCommentData(username string) []domain.UserPostingComment {
-// 	var tmp []UserPostingComment
-// 	err := ud.db.Model(&User{}).Select("posts.ID, comments.ID, users.firstname, users.lastname, users.photoprofile, comments.comment, comments.created_at").Joins("left join posts on posts.userid = users.id").Joins("left join comments on comments.postid = posts.id").Where("users.username = ?", username).Find(&tmp).Error
-// 	if err != nil {
-// 		log.Println("There is problem with data", err.Error())
-// 		return nil
-// 	}
-// 	return ParseUserPostingCommentToArr(tmp)
-// }
+func (ud *userData) SearchUserPostingCommentData(username string) []domain.CommentUser {
+	var profile = User{}
+	err2 := ud.db.Where("username = ?", username).First(&profile).Error
+
+	if err2 != nil {
+		log.Println("There is problem with data", err2.Error())
+		return nil
+	}
+
+	var tmp []CommentUser
+	err := ud.db.Model(&data.Post{}).Order("comments.id DESC").Select("comments.id, users.firstname, users.lastname, users.photoprofile, comments.postid, comments.comment, comments.created_at").
+		Joins("join comments on comments.postid = posts.id").Joins("join users on comments.userid = users.id").Where("posts.userid = ?", profile.ID).Find(&tmp).Limit(50).Error
+	if err != nil {
+		log.Println("There is problem with data", err.Error())
+		return nil
+	}
+	return ParseCommentUserToArr(tmp)
+}

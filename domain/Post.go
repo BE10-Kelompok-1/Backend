@@ -19,6 +19,7 @@ type PostComent struct {
 	ID           int
 	Firstname    string
 	Lastname     string
+	Username     string
 	Photoprofile string
 	Photo        string
 	Caption      string
@@ -30,21 +31,22 @@ type PostHandler interface {
 	Create() echo.HandlerFunc
 	Update() echo.HandlerFunc
 	ReadAll() echo.HandlerFunc
-	ReadMy() echo.HandlerFunc
 }
 
 type PostUseCase interface {
 	CreatePost(newpost Post, userid int) int
 	UpdatePost(newpost Post, postid, userid int) int
 	ReadAllPost() ([]PostComent, []CommentUser, int)
-	ReadMyPost(userid int) ([]Post, int)
 }
 
 type PostData interface {
 	CreatePostData(newpost Post) Post
 	UpdatePostData(newpost Post) Post
 	ReadAllPostData() []PostComent
+<<<<<<< HEAD
+=======
 	ReadMyPostData(userid int) []Post
+>>>>>>> 2e06ba8 (fix conflict)
 	ReadAllCommentData() []CommentUser
 	CheckUser(newpost Post) string
 }

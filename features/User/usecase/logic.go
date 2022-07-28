@@ -22,21 +22,21 @@ func New(uuc domain.UserData, v *validator.Validate) domain.UserUseCase {
 	}
 }
 
-func (uuc *userUseCase) SearchUser(username string) (domain.User, int) {
+func (uuc *userUseCase) SearchUser(username string) (domain.User, []domain.UserPosting, []domain.CommentUser, int) {
 	profile := uuc.userData.SearchUserData(username)
-	// posting := uuc.userData.SearchUserPostingData(username)
-	// comment := uuc.userData.SearchUserPostingCommentData(username)
+	posting := uuc.userData.SearchUserPostingData(username)
+	comment := uuc.userData.SearchUserPostingCommentData(username)
 
 	if username == "" {
 		log.Println("Wrong input")
-		return domain.User{}, 404
+		return domain.User{}, nil, nil, 404
 	}
 
 	if profile.ID == 0 {
 		log.Println("Data not found")
-		return domain.User{}, 404
+		return domain.User{}, nil, nil, 404
 	}
-	return profile, 200
+	return profile, posting, comment, 200
 }
 
 func (uuc *userUseCase) DeleteUser(id int) int {
