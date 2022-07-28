@@ -18,14 +18,20 @@ type Post struct {
 type PostHandler interface {
 	Create() echo.HandlerFunc
 	Update() echo.HandlerFunc
+	ReadAll() echo.HandlerFunc
+	ReadMy() echo.HandlerFunc
 }
 
 type PostUseCase interface {
 	CreatePost(newpost Post, userid int) int
 	UpdatePost(newpost Post, postid, userid int) int
+	ReadAllPost() ([]Post, int)
+	ReadMyPost(userid int) ([]Post, int)
 }
 
 type PostData interface {
 	CreatePostData(newpost Post) Post
 	UpdatePostData(newpost Post) Post
+	ReadAllPostData() []Post
+	ReadMyPostData(userid int) []Post
 }
