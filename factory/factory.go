@@ -1,6 +1,7 @@
 package factory
 
 import (
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
@@ -18,7 +19,7 @@ import (
 	cc "backend/features/Comment/usecase"
 )
 
-func InitFactory(e *echo.Echo, db *gorm.DB) {
+func InitFactory(e *echo.Echo, db *gorm.DB, awsConn *session.Session) {
 	validator := validator.New()
 
 	userData := ud.New(db)
@@ -28,7 +29,7 @@ func InitFactory(e *echo.Echo, db *gorm.DB) {
 
 	postData := pd.New(db)
 	postCase := pc.New(postData, validator)
-	postHandler := pdeli.New(postCase)
+	postHandler := pdeli.New(postCase, awsConn)
 	pdeli.RoutePost(e, postHandler)
 
 	commentData := cd.New(db)

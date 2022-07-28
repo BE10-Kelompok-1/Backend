@@ -52,6 +52,7 @@ func initConfig() *AppConfig {
 	defaultConfig.Username = os.Getenv("DB_USERNAME")
 	defaultConfig.Password = os.Getenv("DB_PASSWORD")
 	defaultConfig.Address = os.Getenv("Address")
+<<<<<<< HEAD
 	cnv, err = strconv.Atoi(os.Getenv("DB_Port"))
 
 	// SERVERPORT = int16(cnv)
@@ -61,6 +62,9 @@ func initConfig() *AppConfig {
 	// defaultConfig.Address = os.Getenv("ADDRESS")
 	// cnv, err = strconv.Atoi(os.Getenv("DB_PORT"))
 
+=======
+	cnv, err = strconv.Atoi(os.Getenv("DB_PORT"))
+>>>>>>> b1af7c8 (unfinished posttesting)
 	if err != nil {
 		log.Fatal("Cannot parse DB Port variable")
 		return nil
