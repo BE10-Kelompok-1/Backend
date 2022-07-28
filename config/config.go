@@ -52,7 +52,7 @@ func initConfig() *AppConfig {
 	defaultConfig.Username = os.Getenv("Username")
 	defaultConfig.Password = os.Getenv("Password")
 	defaultConfig.Address = os.Getenv("Address")
-	cnv, err = strconv.Atoi(os.Getenv("Port"))
+	cnv, err = strconv.Atoi(os.Getenv("DB_Port"))
 
 	// SERVERPORT = int16(cnv)
 	// defaultConfig.Name = os.Getenv("NAME")
