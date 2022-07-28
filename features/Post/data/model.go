@@ -3,6 +3,7 @@ package data
 import (
 	"backend/domain"
 	"backend/features/Comment/data"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -10,9 +11,18 @@ import (
 type Post struct {
 	gorm.Model
 	Userid   int
-	Photo    string         `json:"photo" form:"photo"`
-	Caption  string         `json:"caption" form:"caption" validate:"required"`
-	Comments []data.Comment `gorm:"foreignKey:Postid"`
+	Photo    string             `json:"photo" form:"photo"`
+	Caption  string             `json:"caption" form:"caption" validate:"required"`
+	Comments []data.CommentUser `gorm:"foreignKey:Postid"`
+}
+
+type PostComent struct {
+	ID           int
+	Firstname    string
+	Lastname     string
+	Photoprofile string
+	Comments     []data.CommentUser `gorm:"foreignKey:Postid"`
+	CreatedAt    time.Time
 }
 
 func (p *Post) ToModel() domain.Post {
@@ -25,11 +35,31 @@ func (p *Post) ToModel() domain.Post {
 	}
 }
 
+func (pc *PostComent) ToPostComent() domain.PostComent {
+	return domain.PostComent{
+		ID:           pc.ID,
+		Firstname:    pc.Firstname,
+		Lastname:     pc.Lastname,
+		Photoprofile: pc.Photoprofile,
+		CreatedAt:    pc.CreatedAt,
+	}
+}
+
 func ParseToArr(arr []Post) []domain.Post {
 	var res []domain.Post
 
 	for _, val := range arr {
 		res = append(res, val.ToModel())
+	}
+
+	return res
+}
+
+func ParsePostCommentToArr(arr []PostComent) []domain.PostComent {
+	var res []domain.PostComent
+
+	for _, val := range arr {
+		res = append(res, val.ToPostComent())
 	}
 
 	return res
