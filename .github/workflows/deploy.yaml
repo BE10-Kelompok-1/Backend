@@ -1,35 +1,15 @@
-name: CI
-
-# Controls when the workflow will run
+name: Deploy to AWS EC2
 on:
-  #pull_request_target:
-    types: ["closed"]
-    branches: [ "main" ]
+  push:
+    branches:
+      - main
 
-#jobs:
-  docker:
+jobs:
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
-      -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      -
-        name: Login to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      -
-        name: Build and push
-        uses: docker/build-push-action@v3
-        with:
-          push: true
-          tags: rafkimaisya/deploy:latest
-          
-      - name: executing remote ssh commands using password
+      - name: executing deploy to server using remote ssh key
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
@@ -37,7 +17,9 @@ on:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
+            cd /home/ubuntu/Project
+            git pull origin main
             docker stop g1container
             docker rm g1container
-            docker rmi rafkimaisya/deploy:latest
-            docker run -d -p 80:8000 -e SECRET=${{ secrets.SECRET }} -e SERVERPORT=${{ secrets.SERVERPORT }} -e Name=${{ secrets.Name }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e Address=${{ secrets.Address }} -e DB_Port=${{ secrets.DB_Port }} --name g1container rafkimaisya/deploy:latest
+            docker build -t deploy:latest .
+            docker run -d -p 80:8000 -e SECRET=${{ secrets.SECRET }} -e SERVERPORT=${{ secrets.SERVERPORT }} -e Name=${{ secrets.Name }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e Address=${{ secrets.Address }} -e DB_Port=${{ secrets.DB_Port }} --name g1container deploy:latest
