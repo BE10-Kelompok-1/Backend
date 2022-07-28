@@ -25,6 +25,7 @@ type PostComent struct {
 	CreatedAt    time.Time
 }
 
+//line
 type PostHandler interface {
 	Create() echo.HandlerFunc
 	Update() echo.HandlerFunc
