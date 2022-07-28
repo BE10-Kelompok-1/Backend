@@ -63,3 +63,29 @@ func (ch *commentHandler) Create() echo.HandlerFunc {
 		})
 	}
 }
+
+func (ch *commentHandler) Read() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		comment, status := ch.commentUseCase.ReadComment()
+
+		if status == 404 {
+			return c.JSON(http.StatusNotFound, map[string]interface{}{
+				"code":    status,
+				"message": "Data not found",
+			})
+		}
+
+		if status == 500 {
+			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
+				"code":    status,
+				"message": "There is an error in internal server",
+			})
+		}
+
+		return c.JSON(http.StatusOK, map[string]interface{}{
+			"comments": comment,
+			"code":     status,
+			"message":  "get data success",
+		})
+	}
+}

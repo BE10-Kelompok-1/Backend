@@ -2,6 +2,7 @@ package data
 
 import (
 	"backend/domain"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -13,6 +14,16 @@ type Comment struct {
 	Comment string `json:"comment" form:"comment" validate:"required"`
 }
 
+type CommentUser struct {
+	Id           int
+	Firstname    string
+	Lastname     string
+	Photoprofile string
+	Postid       int
+	Comment      string
+	Created_at   time.Time
+}
+
 func (c *Comment) ToModel() domain.Comment {
 	return domain.Comment{
 		ID:      int(c.ID),
@@ -22,11 +33,33 @@ func (c *Comment) ToModel() domain.Comment {
 	}
 }
 
+func (cu *CommentUser) ToCommentUser() domain.CommentUser {
+	return domain.CommentUser{
+		Id:           cu.Id,
+		Firstname:    cu.Firstname,
+		Lastname:     cu.Lastname,
+		Photoprofile: cu.Photoprofile,
+		Postid:       cu.Postid,
+		Comment:      cu.Comment,
+		Created_at:   cu.Created_at,
+	}
+}
+
 func ParseToArr(arr []Comment) []domain.Comment {
 	var res []domain.Comment
 
 	for _, val := range arr {
 		res = append(res, val.ToModel())
+	}
+
+	return res
+}
+
+func ParseCommentUserToArr(arr []CommentUser) []domain.CommentUser {
+	var res []domain.CommentUser
+
+	for _, val := range arr {
+		res = append(res, val.ToCommentUser())
 	}
 
 	return res
