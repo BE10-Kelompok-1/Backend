@@ -16,6 +16,7 @@ type User struct {
 	Birthdate    string
 	Photoprofile string
 	Posts        []Post
+	Comments     []Comment
 }
 
 type UserPosting struct {
