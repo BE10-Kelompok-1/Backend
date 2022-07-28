@@ -1,15 +1,19 @@
-name: Deploy to AWS EC2
+name: CI
+
+# Controls when the workflow will run
 on:
-  push:
-    branches:
-      - main
+  pull_request_target:
+    types: ["closed"]
+    branches: [ "main" ]
 
 jobs:
-  build:
-    name: Build
+  docker:
     runs-on: ubuntu-latest
     steps:
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> fd09f20 (Update deploy.yaml)
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -25,19 +29,20 @@ jobs:
       -
         name: Build and push
         uses: docker/build-push-action@v3
+<<<<<<< HEAD
 =======
       - name: executing deploy to server using remote ssh key
         uses: appleboy/ssh-action@master
 >>>>>>> f3f3610 (Update deploy.yaml)
+=======
+>>>>>>> fd09f20 (Update deploy.yaml)
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd /home/ubuntu/production/backend
-            git pull origin main
             docker stop g1container
             docker rm g1container
-            docker build -t deploy:latest .
-            docker run -d -p 80:8000 -e SECRET=${{ secrets.SECRET }} -e SERVERPORT=${{ secrets.SERVERPORT }} -e Name=${{ secrets.Name }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e Address=${{ secrets.Address }} -e DB_Port=${{ secrets.DB_Port }} --name g1container deploy:latest
+            docker rmi rafkimaisya/deploy:latest
+            docker run -d -p 80:8000 -e SECRET=${{ secrets.SECRET }} -e SERVERPORT=${{ secrets.SERVERPORT }} -e Name=${{ secrets.Name }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e Address=${{ secrets.Address }} -e DB_Port=${{ secrets.DB_Port }} --name g1container rafkimaisya/deploy:latest
