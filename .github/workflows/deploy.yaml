@@ -23,5 +23,9 @@ jobs:
             docker stop appContainer
             docker rm appContainer
             docker build -t g1app:latest
+<<<<<<< HEAD
+            docker run -d -p 80:80 -e -e SERVERPORT=${{secrets.SERVERPORT}} -e SECRET=${{secrets.SECRET}} -e NAME=${{ secrets.NAME}} -e USERNAME=${{ secrets.USERNAME }} -e PASSWORD=${{ secrets.PASSWORD}} -e ADDRESS=${{ secrets.ADDRESS }} -e DB_PORT=${{ secrets.DB_PORT }} --name appContainer g1app:latest
+=======
             docker run -d -p 80:80 -e SECRET=${{secrets.SECRET}} -e NAME=${{ secrets.NAME}} -e USERNAME=${{ secrets.USERNAME }} -e PASSWORD=${{ secrets.PASSWORD}} -e ADDRESS=${{ secrets.ADDRESS }} -e DB_PORT=${{ secrets.DB_PORT }} --name appContainer g1app:latest
+>>>>>>> 2034d753272bcff4436bdf138a95bb220b541b34
   
