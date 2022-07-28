@@ -8,9 +8,11 @@ import (
 
 type Post struct {
 	ID        int
+	Userid    int
 	Photo     string
 	Caption   string
 	CreatedAt time.Time
+	Comments  []Comment
 }
 
 type PostHandler interface {
@@ -22,14 +24,14 @@ type PostHandler interface {
 
 type PostUseCase interface {
 	CreatePost(newpost Post, userid int) int
-	UpdatePost(newpost Post, userid int) int
+	UpdatePost(newpost Post, postid, userid int) int
 	ReadAllPost() ([]Post, int)
 	ReadMyPost(userid int) ([]Post, int)
 }
 
 type PostData interface {
-	CreatePostData(newpost Post) User
-	UpdatePostData(newpost Post) User
+	CreatePostData(newpost Post) Post
+	UpdatePostData(newpost Post) Post
 	ReadAllPostData() []Post
 	ReadMyPostData(userid int) []Post
 }

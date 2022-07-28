@@ -22,28 +22,25 @@ func New(uuc domain.UserData, v *validator.Validate) domain.UserUseCase {
 	}
 }
 
-func (uuc *userUseCase) SearchUser(username string) (domain.User, int) {
-	search := uuc.userData.SearchUserData(username)
+func (uuc *userUseCase) SearchUser(username string) (domain.User, []domain.UserPosting, []domain.UserPostingComment, int) {
+	profile := uuc.userData.SearchUserData(username)
+	posting := uuc.userData.SearchUserPostingData(username)
+	comment := uuc.userData.SearchUserPostingCommentData(username)
 
-	// if err != nil {
-	// 	log.Println("There is an error in internal server")
-	// 	return domain.User{}, 500
-	// }
-	if search.ID == 0 {
-		log.Println("Data not found")
-		return domain.User{}, 404
+	if username == "" {
+		log.Println("Wrong input")
+		return domain.User{}, nil, nil, 404
 	}
 
-	return search, 200
+	if profile.ID == 0 {
+		log.Println("Data not found")
+		return domain.User{}, nil, nil, 404
+	}
+	return profile, posting, comment, 200
 }
 
 func (uuc *userUseCase) DeleteUser(id int) int {
 	delete := uuc.userData.DeleteUserData(id)
-
-	// if err != nil {
-	// 	log.Println("There is an error in internal server")
-	// 	return 500
-	// }
 
 	if !delete {
 		log.Println("Data not found")
@@ -59,7 +56,14 @@ func (uuc *userUseCase) RegisterUser(newuser domain.User, cost int) int {
 	validError := uuc.validate.Struct(user)
 
 	if validError != nil {
-		log.Println("Validation errror : ", validError.Error())
+		log.Println("Validation errror : ", validError)
+		return 400
+	}
+
+	duplicate := uuc.userData.CheckDuplicate(user.ToModel())
+
+	if duplicate {
+		log.Println("Duplicate Data")
 		return 400
 	}
 
@@ -95,6 +99,13 @@ func (uuc *userUseCase) UpdateUser(newuser domain.User, userid int, cost int) in
 		return 400
 	}
 
+	duplicate := uuc.userData.CheckDuplicate(user.ToModel())
+
+	if duplicate {
+		log.Println("Duplicate Data")
+		return 400
+	}
+
 	hashed, err := bcrypt.GenerateFromPassword([]byte(user.Password), cost)
 
 	if err != nil {
@@ -127,4 +138,14 @@ func (uuc *userUseCase) LoginUser(userdata domain.User) (domain.User, error) {
 	}
 
 	return login, nil
+}
+
+func (uuc *userUseCase) ProfileUser(userid int) (domain.User, error) {
+	get := uuc.userData.ProfileUserData(userid)
+
+	if get.ID == 0 {
+		return domain.User{}, errors.New("no data")
+	}
+
+	return get, nil
 }
