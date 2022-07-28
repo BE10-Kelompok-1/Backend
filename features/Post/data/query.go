@@ -50,8 +50,10 @@ func (pd *postData) UpdatePostData(newpost domain.Post) domain.Post {
 
 func (pd *postData) ReadAllPostData() []domain.PostComent {
 	var tmp []PostComent
-	err := pd.db.Find(&tmp).Error
-	//err := pd.db.Model(&Post{}).Select("comments.id, users.firstname, users.lastname, users.username, users.photoprofile, posts.photo, posts.caption, posts.created_at, comments.id, comments.comment, comments.created_at").Joins("left join users on users.ID = comments.userid").Find(&data)
+	err := pd.db.Model(&Post{}).Select("posts.id, users.firstname, users.lastname, users.username, users.photoprofile, posts.photo, posts.caption, posts.created_at").
+		Joins("left join users on users.ID = posts.userid").Find(&tmp).Error
+	// err := pd.db.Model(&Post{}).Select("posts.id, users.firstname, users.lastname, users.username, users.photoprofile, posts.photo, posts.caption, posts.created_at, comments.id, users.firstname, users.lastname, users.photoprofile, comments.comment, comments.created_at").
+	// 	Joins("left joins users on users.ID = posts.userid").Joins("left joins comments on comments.userid = users.id").Find(&tmp).Error
 
 	if err != nil {
 		log.Println("Cannot retrieve object", err.Error())

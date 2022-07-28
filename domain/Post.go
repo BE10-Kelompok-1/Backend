@@ -19,9 +19,18 @@ type PostComent struct {
 	ID           int
 	Firstname    string
 	Lastname     string
+	Username     string
 	Photoprofile string
-	Comments     []CommentUser
+	Photo        string
+	Caption      string
 	CreatedAt    time.Time
+	Comments     []CommentUser
+	// Idcoment           int
+	// Firstnamecoment    string
+	// Lastnamecoment     string
+	// Photoprofilecoment string
+	// Comment            string
+	// Created_at         time.Time
 }
 
 type PostHandler interface {

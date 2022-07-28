@@ -20,9 +20,18 @@ type PostComent struct {
 	ID           int
 	Firstname    string
 	Lastname     string
+	Username     string
 	Photoprofile string
-	Comments     []data.CommentUser `gorm:"foreignKey:Postid"`
+	Photo        string
+	Caption      string
 	CreatedAt    time.Time
+	Comments     []data.CommentUser `gorm:"foreignKey:Postid"`
+	// Idcoment           int
+	// Firstnamecoment    string
+	// Lastnamecoment     string
+	// Photoprofilecoment string
+	// Comment            string
+	// Created_at         time.Time
 }
 
 func (p *Post) ToModel() domain.Post {
@@ -40,8 +49,17 @@ func (pc *PostComent) ToPostComent() domain.PostComent {
 		ID:           pc.ID,
 		Firstname:    pc.Firstname,
 		Lastname:     pc.Lastname,
+		Username:     pc.Username,
 		Photoprofile: pc.Photoprofile,
+		Photo:        pc.Photo,
+		Caption:      pc.Caption,
 		CreatedAt:    pc.CreatedAt,
+		// Idcoment:           pc.Idcoment,
+		// Firstnamecoment:    pc.Firstnamecoment,
+		// Lastnamecoment:     pc.Photoprofilecoment,
+		// Photoprofilecoment: pc.Photoprofilecoment,
+		// Comment:            pc.Comment,
+		// Created_at:         pc.Created_at,
 	}
 }
 
