@@ -69,7 +69,7 @@ func (puc *postUsecase) ReadAllPost() ([]domain.Post, int) {
 		return nil, 404
 	}
 
-	return reads, 200
+	// return reads, 200
 }
 
 func (puc *postUsecase) ReadMyPost(userid int) ([]domain.Post, int) {
