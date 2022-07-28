@@ -79,3 +79,18 @@ func (pd *postData) ReadAllPostData() []domain.PostComent {
 
 	return ParsePostCommentToArr(tmp)
 }
+
+func (pd *postData) DeletePostData(postid, userid int) bool {
+	res := pd.db.Delete(&Post{}, "ID = ? AND userid = ?", postid, userid)
+
+	if res.Error != nil {
+		log.Println("Cannot delete data", res)
+		return false
+	}
+	if res.RowsAffected < 1 {
+		log.Println("No data deleted", res.Error.Error())
+		return false
+	}
+
+	return true
+}

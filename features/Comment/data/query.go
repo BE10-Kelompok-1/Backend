@@ -40,3 +40,16 @@ func (cd *commentData) ReadCommentData() []domain.CommentUser {
 	}
 	return ParseCommentUserToArr(data)
 }
+
+func (cd *commentData) DeleteCommentData(commentid, userid int) bool {
+	err := cd.db.Where("ID = ? AND userid = ?", commentid, userid).Delete(&Comment{})
+	if err.Error != nil {
+		log.Println("Cannot delete data", err.Error.Error())
+		return false
+	}
+	if err.RowsAffected < 1 {
+		log.Println("No data deleted", err.Error.Error())
+		return false
+	}
+	return true
+}

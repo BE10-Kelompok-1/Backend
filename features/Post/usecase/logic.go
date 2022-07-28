@@ -73,3 +73,14 @@ func (puc *postUsecase) ReadAllPost() ([]domain.PostComent, []domain.CommentUser
 
 	return reads, readcom, 200
 }
+
+func (puc *postUsecase) DeletePost(postid, userid int) int {
+	status := puc.postData.DeletePostData(postid, userid)
+
+	if !status {
+		log.Println("Data not found")
+		return 404
+	}
+
+	return 200
+}

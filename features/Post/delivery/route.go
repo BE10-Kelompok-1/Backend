@@ -20,4 +20,5 @@ func RoutePost(e *echo.Echo, ph domain.PostHandler) {
 	post.POST("", ph.Create(), middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET))))
 	post.PUT("/:postid", ph.Update(), middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET))))
 	post.GET("", ph.ReadAll())
+	post.DELETE("/:postid", ph.Delete(), middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET))))
 }

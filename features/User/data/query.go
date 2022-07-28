@@ -3,7 +3,6 @@ package data
 import (
 	"backend/domain"
 	"backend/features/Post/data"
-	"fmt"
 	"log"
 
 	"gorm.io/gorm"
@@ -75,7 +74,6 @@ func (ud *userData) SearchUserData(username string) domain.User {
 		log.Println("There is problem with data", err.Error())
 		return domain.User{}
 	}
-	fmt.Println("Search User Data:", tmp)
 	return tmp.ToModel()
 }
 
