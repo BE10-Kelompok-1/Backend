@@ -118,6 +118,8 @@ func (uh *userHandler) Search() echo.HandlerFunc {
 
 		var comarrmap = []domain.CommentUser{}
 		var arrmap []map[string]interface{}
+		// var res2 = []domain.User{}
+		// var res2map map[string]interface{}
 
 		if status == 404 {
 			return c.JSON(http.StatusNotFound, map[string]interface{}{
@@ -133,6 +135,12 @@ func (uh *userHandler) Search() echo.HandlerFunc {
 			})
 		}
 
+		// res2 = append(res2, profile)
+		// // res2["photoprofile"] = profile.Photoprofile
+		// // res2["firstname"] = profile.Firstname
+		// // res2["lastname"] = profile.Lastname
+		// res2map["profiles"] = res2
+		// arrmap = append(arrmap, res2map)
 		for i := 0; i < len(posting); i++ {
 			var res = map[string]interface{}{}
 			for j := 0; j < len(comment); j++ {
@@ -146,15 +154,16 @@ func (uh *userHandler) Search() echo.HandlerFunc {
 			res["created_at"] = posting[i].CreatedAt
 			res["comments"] = comarrmap
 
-			comarrmap = comarrmap[2:]
+			comarrmap = comarrmap[len(comarrmap):]
 			arrmap = append(arrmap, res)
+			log.Println("arrmap postkomen", arrmap)
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"photoprofile": profile.Photoprofile,
 			"firstname":    profile.Firstname,
 			"lastname":     profile.Lastname,
-			"usename":      profile.Username,
+			"username":     profile.Username,
 			"posts":        arrmap,
 			"code":         status,
 			"message":      "get data success",

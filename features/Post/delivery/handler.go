@@ -149,10 +149,8 @@ func (ph *postHandler) ReadAll() echo.HandlerFunc {
 			res["caption"] = data[i].Caption
 			res["created_at"] = data[i].CreatedAt
 			res["comments"] = comarrmap
-			// res["code"] = status
-			// res["message"] = "get data success"
 
-			comarrmap = comarrmap[2:]
+			comarrmap = comarrmap[len(comarrmap):]
 			arrmap = append(arrmap, res)
 		}
 
