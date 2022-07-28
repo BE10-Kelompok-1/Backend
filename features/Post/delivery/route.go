@@ -19,4 +19,5 @@ func RoutePost(e *echo.Echo, ph domain.PostHandler) {
 	post := e.Group("/posts")
 	post.POST("", ph.Create(), middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET))))
 	post.PUT("/:postid", ph.Update(), middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET))))
+	post.GET("", ph.ReadAll())
 }

@@ -126,3 +126,23 @@ func (ud *userData) ProfileUserData(userid int) domain.User {
 
 	return user.ToModel()
 }
+
+func (ud *userData) SearchUserPostingData(username string) []domain.UserPosting {
+	var tmp []UserPosting
+	err := ud.db.Model(&User{}).Select("users.ID, posts.ID, posts.photo, posts.caption, posts.created_at").Joins("left join posts on posts.userid = users.id").Where("users.username = ?", username).Find(&tmp).Error
+	if err != nil {
+		log.Println("There is problem with data", err.Error())
+		return nil
+	}
+	return ParseUserPostingToArr(tmp)
+}
+
+func (ud *userData) SearchUserPostingCommentData(username string) []domain.UserPostingComment {
+	var tmp []UserPostingComment
+	err := ud.db.Model(&User{}).Select("posts.ID, comments.ID, users.firstname, users.lastname, users.photoprofile, comments.comment, comments.created_at").Joins("left join posts on posts.userid = users.id").Joins("left join comments on comments.postid = posts.id").Where("users.username = ?", username).Find(&tmp).Error
+	if err != nil {
+		log.Println("There is problem with data", err.Error())
+		return nil
+	}
+	return ParseUserPostingCommentToArr(tmp)
+}

@@ -47,3 +47,31 @@ func (pd *postData) UpdatePostData(newpost domain.Post) domain.Post {
 
 	return post.ToModel()
 }
+
+func (pd *postData) ReadAllPostData() []domain.Post {
+	var tmp []Post
+	err := pd.db.Find(&tmp).Error
+
+	if err != nil {
+		log.Println("Cannot retrieve object", err.Error())
+		return nil
+	}
+
+	if len(tmp) == 0 {
+		log.Println("No data found", gorm.ErrRecordNotFound.Error())
+		return nil
+	}
+
+	return ParseToArr(tmp)
+}
+
+func (pd *postData) ReadMyPostData(userid int) []domain.Post {
+	var tmp []Post
+	err := pd.db.Where("Userid = ?", userid).Find(&tmp).Error
+
+	if err != nil {
+		log.Println("There is problem with data")
+		return nil
+	}
+	return ParseToArr(tmp)
+}
