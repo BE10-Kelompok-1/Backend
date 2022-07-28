@@ -3,20 +3,27 @@ package delivery
 import (
 	"backend/domain"
 	"backend/features/common"
+	awss3 "backend/infrastructure/database/aws"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/labstack/echo/v4"
 )
 
 type postHandler struct {
+	postData    domain.PostData
 	postUseCase domain.PostUseCase
+	conn        *session.Session
 }
 
-func New(puc domain.PostUseCase) domain.PostHandler {
+func New(pd domain.PostData, puc domain.PostUseCase, aws *session.Session) domain.PostHandler {
 	return &postHandler{
 		postUseCase: puc,
+		postData:    pd,
+		conn:        aws,
 	}
 }
 
@@ -35,6 +42,17 @@ func (ph *postHandler) Create() echo.HandlerFunc {
 			})
 		}
 
+		name := ph.postData.CheckUser(newpost.ToModel())
+
+		file, err := c.FormFile("photo")
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		filename := fmt.Sprintf("%s_postpic", name)
+		link := awss3.DoUpload(ph.conn, *file, filename)
+		newpost.Photo = link
 		status := ph.postUseCase.CreatePost(newpost.ToModel(), id)
 
 		if status == 400 {

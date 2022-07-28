@@ -2,21 +2,15 @@ package data
 
 import (
 	"backend/domain"
-<<<<<<< HEAD
-	"time"
-
-	//commentdata "backend/features/Comment/data"
-=======
 	commentdata "backend/features/Comment/data"
->>>>>>> bdb8d4d (update model)
 	postdata "backend/features/Post/data"
+	"time"
 
 	"gorm.io/gorm"
 )
 
 type User struct {
 	gorm.Model
-<<<<<<< HEAD
 	Firstname    string                `json:"firstname" form:"firstname" validate:"required"`
 	Lastname     string                `json:"lastname" form:"lastname" validate:"required"`
 	Username     string                `json:"username" form:"username" validate:"required"`
@@ -25,16 +19,6 @@ type User struct {
 	Birthdate    string                `json:"birthdate" form:"birthdate" validate:"required"`
 	Photoprofile string                `json:"photoprofile" form:"photoprofile"`
 	Posts        []postdata.Post       `gorm:"foreignKey:Userid"`
-=======
-	Firstname    string          `json:"firstname" form:"firstname" validate:"required"`
-	Lastname     string          `json:"lastname" form:"lastname" validate:"required"`
-	Username     string          `json:"username" form:"username" validate:"required"`
-	Email        string          `json:"email" form:"email" validate:"required,email"`
-	Password     string          `json:"password" form:"password" validate:"required"`
-	Birthdate    string          `json:"birthdate" form:"birthdate" validate:"required"`
-	Photoprofile string          `json:"photoprofile" form:"photoprofile"`
-	Posts        []postdata.Post `gorm:"foreignKey:Userid"`
->>>>>>> 13dfa70 (Update model.go)
 	Comments     []commentdata.Comment `gorm:"foreignKey:Userid"`
 }
 

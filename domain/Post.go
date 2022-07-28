@@ -46,5 +46,9 @@ type PostData interface {
 	UpdatePostData(newpost Post) Post
 	ReadAllPostData() []PostComent
 	ReadAllCommentData() []CommentUser
+<<<<<<< HEAD
 	DeletePostData(postid, userid int) bool
+=======
+	CheckUser(newpost Post) string
+>>>>>>> eb5fc05 (unfinished posttesting)
 }
