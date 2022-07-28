@@ -197,3 +197,8 @@ func TestDeleteUser(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 }
+
+func TestSearchUserPostingData(t *testing.T)        {}
+func TestSearchUserPostingCommentData(t *testing.T) {}
+
+func TestProfileUserData(t *testing.T) {}

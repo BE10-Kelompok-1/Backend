@@ -22,32 +22,25 @@ func New(uuc domain.UserData, v *validator.Validate) domain.UserUseCase {
 	}
 }
 
-func (uuc *userUseCase) SearchUser(username string) (domain.User, []domain.User_Posting, int) {
-	searchpro, searchpost := uuc.userData.SearchUserData(username)
+func (uuc *userUseCase) SearchUser(username string) (domain.User, []domain.UserPosting, []domain.UserPostingComment, int) {
+	profile := uuc.userData.SearchUserData(username)
+	posting := uuc.userData.SearchUserPostingData(username)
+	comment := uuc.userData.SearchUserPostingCommentData(username)
 
-	// if err != nil {
-	// 	log.Println("There is an error in internal server")
-	// 	return domain.User{}, 500
-	// }
 	if username == "" {
-		return domain.User{}, []domain.User_Posting{}, 404
+		log.Println("Wrong input")
+		return domain.User{}, nil, nil, 404
 	}
 
-	if len(searchpost) == 0 {
+	if profile.ID == 0 {
 		log.Println("Data not found")
-		return domain.User{}, []domain.User_Posting{}, 404
+		return domain.User{}, nil, nil, 404
 	}
-
-	return searchpro, searchpost, 200
+	return profile, posting, comment, 200
 }
 
 func (uuc *userUseCase) DeleteUser(id int) int {
 	delete := uuc.userData.DeleteUserData(id)
-
-	// if err != nil {
-	// 	log.Println("There is an error in internal server")
-	// 	return 500
-	// }
 
 	if !delete {
 		log.Println("Data not found")
@@ -147,12 +140,12 @@ func (uuc *userUseCase) LoginUser(userdata domain.User) (domain.User, error) {
 	return login, nil
 }
 
-// func (uuc *userUseCase) ProfileUser(userid int) (domain.User, error) {
-// 	get := uuc.userData.ProfileUserData(userid)
+func (uuc *userUseCase) ProfileUser(userid int) (domain.User, error) {
+	get := uuc.userData.ProfileUserData(userid)
 
-// 	if get.ID == 0 {
-// 		return domain.User{}, errors.New("no data")
-// 	}
+	if get.ID == 0 {
+		return domain.User{}, errors.New("no data")
+	}
 
-// 	return get, nil
-// }
+	return get, nil
+}

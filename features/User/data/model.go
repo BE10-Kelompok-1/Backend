@@ -1,8 +1,6 @@
 package data
 
 import (
-	// "backend/domain"
-
 	"backend/domain"
 	commentdata "backend/features/Comment/data"
 	postdata "backend/features/Post/data"
@@ -24,12 +22,24 @@ type User struct {
 	Comments     []commentdata.Comment `gorm:"foreignKey:Userid"`
 }
 
-type User_Posting struct {
-	Username  string
-	Postid    uint
+type UserPosting struct {
+	UserID    uint
+	PostID    int
 	Photo     string
 	Caption   string
 	CreatedAt time.Time
+	Posts     []postdata.Post `gorm:"foreignKey:Userid"`
+}
+
+type UserPostingComment struct {
+	PostID       int
+	CommentID    int
+	Firstname    string
+	Lastname     string
+	Photoprofile string
+	Comment      string
+	CreatedAt    time.Time
+	Comments     []commentdata.Comment `gorm:"foreignKey:Userid"`
 }
 
 func (u *User) ToModel() domain.User {
@@ -45,13 +55,23 @@ func (u *User) ToModel() domain.User {
 	}
 }
 
-func (up *User_Posting) ToModelUserPosting() domain.User_Posting {
-	return domain.User_Posting{
-		Username:  up.Username,
-		Postid:    uint(up.Postid),
+func (up *UserPosting) ToUserPosting() domain.UserPosting {
+	return domain.UserPosting{
+		PostID:    int(up.PostID),
 		Photo:     up.Photo,
 		Caption:   up.Caption,
 		CreatedAt: up.CreatedAt,
+	}
+}
+
+func (upc *UserPostingComment) ToUserPostingComment() domain.UserPostingComment {
+	return domain.UserPostingComment{
+		CommentID:    int(upc.CommentID),
+		Firstname:    upc.Firstname,
+		Lastname:     upc.Lastname,
+		Photoprofile: upc.Photoprofile,
+		Comment:      upc.Comment,
+		CreatedAt:    upc.CreatedAt,
 	}
 }
 
@@ -65,11 +85,21 @@ func ParseToArr(arr []User) []domain.User {
 	return res
 }
 
-func ParseToArr2(arr []User_Posting) []domain.User_Posting {
-	var res []domain.User_Posting
+func ParseUserPostingToArr(arr []UserPosting) []domain.UserPosting {
+	var res []domain.UserPosting
 
 	for _, val := range arr {
-		res = append(res, val.ToModelUserPosting())
+		res = append(res, val.ToUserPosting())
+	}
+
+	return res
+}
+
+func ParseUserPostingCommentToArr(arr []UserPostingComment) []domain.UserPostingComment {
+	var res []domain.UserPostingComment
+
+	for _, val := range arr {
+		res = append(res, val.ToUserPostingComment())
 	}
 
 	return res

@@ -15,16 +15,24 @@ type User struct {
 	Password     string
 	Birthdate    string
 	Photoprofile string
+	Posts        []Post
+	Comments     []Comment
 }
 
-type User_Posting struct {
-	Username  string
-	Postid    uint
+type UserPosting struct {
+	PostID    int
 	Photo     string
 	Caption   string
 	CreatedAt time.Time
-	Posts     []Post
-	Comments  []Comment
+}
+
+type UserPostingComment struct {
+	CommentID    int
+	Firstname    string
+	Lastname     string
+	Photoprofile string
+	Comment      string
+	CreatedAt    time.Time
 }
 
 type UserHandler interface {
@@ -33,25 +41,27 @@ type UserHandler interface {
 	Search() echo.HandlerFunc
 	Delete() echo.HandlerFunc
 	Login() echo.HandlerFunc
-	//Profile() echo.HandlerFunc
+	Profile() echo.HandlerFunc
 }
 
 type UserUseCase interface {
 	RegisterUser(newuser User, cost int) int
 	UpdateUser(newuser User, userid, cost int) int
-	SearchUser(username string) (User, []User_Posting, int)
+	SearchUser(username string) (User, []UserPosting, []UserPostingComment, int)
 	DeleteUser(userid int) int
 	LoginUser(userdata User) (User, error)
-	//ProfileUser(userid int) (User, error)
+	ProfileUser(userid int) (User, error)
 }
 
 type UserData interface {
 	RegisterData(newuser User) User
 	UpdateUserData(newuser User) User
-	SearchUserData(username string) (User, []User_Posting)
+	SearchUserData(username string) User
 	DeleteUserData(userid int) bool
 	LoginData(userdata User) User
 	GetPasswordData(name string) string
 	CheckDuplicate(newuser User) bool
-	//ProfileUserData(userid int) User
+	SearchUserPostingData(username string) []UserPosting
+	SearchUserPostingCommentData(username string) []UserPostingComment
+	ProfileUserData(userid int) User
 }
