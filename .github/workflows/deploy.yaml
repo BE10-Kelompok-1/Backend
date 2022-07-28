@@ -27,15 +27,17 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: rafkimaisya/app-g-one:latest
+          tags: rafkimaisya/deploy:latest
           
       - name: executing remote ssh commands using password
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEYSAYA }}
+          key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd project
-            docker-compose down --rmi all --remove-orphans && docker-compose up -d --remove-orphans
+            docker stop g1container
+            docker rm g1container
+            docker rmi rafkimaisya/deploy:latest
+            docker run -d -p 80:80 -e SECRET=${{ secrets.SECRET }} -e SERVERPORT=${{ secrets.SERVERPORT }} -e Name=${{ secrets.Name }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e Address=${{ secrets.Address }} -e DB_Port=${{ secrets.DB_Port }} --name g1container rafkimaisya/deploy:latest
