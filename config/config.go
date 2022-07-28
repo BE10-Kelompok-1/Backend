@@ -5,7 +5,12 @@ import (
 	"os"
 	"strconv"
 	"sync"
+<<<<<<< HEAD
 	// 	"github.com/joho/godotenv"
+=======
+
+// 	"github.com/joho/godotenv"
+>>>>>>> 49057f1 (Update config.go)
 )
 
 type AppConfig struct {
@@ -33,12 +38,21 @@ func GetConfig() *AppConfig {
 
 func initConfig() *AppConfig {
 	var defaultConfig AppConfig
+<<<<<<< HEAD
 	// 	err := godotenv.Load("local.env")
 
 	// 	if err != nil {
 	// 		log.Fatal("Cannot read configuration")
 	// 		return nil
 	// 	}
+=======
+// 	err := godotenv.Load("local.env")
+
+// 	if err != nil {
+// 		log.Fatal("Cannot read configuration")
+// 		return nil
+// 	}
+>>>>>>> 49057f1 (Update config.go)
 	SECRET = os.Getenv("SECRET")
 	cnv, err := strconv.Atoi(os.Getenv("SERVERPORT"))
 	if err != nil {
