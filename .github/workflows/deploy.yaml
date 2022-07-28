@@ -40,4 +40,4 @@ jobs:
             docker stop g1container
             docker rm g1container
             docker rmi rafkimaisya/deploy:latest
-            docker run -d -p 80:80 -e SECRET=${{ secrets.SECRET }} -e SERVERPORT=${{ secrets.SERVERPORT }} -e Name=${{ secrets.Name }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e Address=${{ secrets.Address }} -e DB_Port=${{ secrets.DB_Port }} --name g1container rafkimaisya/deploy:latest
+            docker run -d -p 80:8000 -e SECRET=${{ secrets.SECRET }} -e SERVERPORT=${{ secrets.SERVERPORT }} -e Name=${{ secrets.Name }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e Address=${{ secrets.Address }} -e DB_Port=${{ secrets.DB_Port }} --name g1container rafkimaisya/deploy:latest

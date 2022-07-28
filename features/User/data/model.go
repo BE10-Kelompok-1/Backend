@@ -10,14 +10,14 @@ import (
 
 type User struct {
 	gorm.Model
-	Firstname    string                `json:"firstname" form:"firstname" validate:"required"`
-	Lastname     string                `json:"lastname" form:"lastname" validate:"required"`
-	Username     string                `json:"username" form:"username" validate:"required"`
-	Email        string                `json:"email" form:"email" validate:"required,email"`
-	Password     string                `json:"password" form:"password" validate:"required"`
-	Birthdate    string                `json:"birthdate" form:"birthdate" validate:"required"`
-	Photoprofile string                `json:"photoprofile" form:"photoprofile"`
-	Posts        []postdata.Post       `gorm:"foreignKey:Userid"`
+	Firstname    string          `json:"firstname" form:"firstname" validate:"required"`
+	Lastname     string          `json:"lastname" form:"lastname" validate:"required"`
+	Username     string          `json:"username" form:"username" validate:"required"`
+	Email        string          `json:"email" form:"email" validate:"required,email"`
+	Password     string          `json:"password" form:"password" validate:"required"`
+	Birthdate    string          `json:"birthdate" form:"birthdate" validate:"required"`
+	Photoprofile string          `json:"photoprofile" form:"photoprofile"`
+	Posts        []postdata.Post `gorm:"foreignKey:Userid"`
 	Comments     []commentdata.Comment `gorm:"foreignKey:Userid"`
 }
 
