@@ -1,83 +1,80 @@
 package usecase
 
-import (
-	"backend/domain"
-	"backend/features/Post/data"
-	"log"
+// type postUsecase struct {
+// 	postData domain.PostData
+// 	validate *validator.Validate
+// }
 
-	"github.com/go-playground/validator/v10"
-)
+// // func New(pd domain.PostData, v *validator.Validate) domain.PostUseCase {
+// // 	return &postUsecase{
+// // 		postData: pd,
+// // 		validate: v,
+// // 	}
+// // }
 
-type postUsecase struct {
-	postData domain.PostData
-	validate *validator.Validate
-}
+// // CreatePost implements domain.PostUseCase
+// func (puc *postUsecase) CreatePost(newpost domain.Post, userid int) int {
+// 	var post = data.FromModel(newpost)
+// 	validError := puc.validate.Struct(post)
 
-func New(pd domain.PostData, v *validator.Validate) domain.PostUseCase {
-	return &postUsecase{
-		postData: pd,
-		validate: v,
-	}
-}
+// 	if validError != nil {
+// 		log.Println("Validation errror : ", validError)
+// 		return 400
+// 	}
 
-// CreatePost implements domain.PostUseCase
-func (puc *postUsecase) CreatePost(newpost domain.Post, userid int) int {
-	var post = data.FromModel(newpost)
-	validError := puc.validate.Struct(post)
+// 	post.Userid = userid
+// 	create := puc.postData.CreatePostData(post.ToModel())
 
-	if validError != nil {
-		log.Println("Validation errror : ", validError)
-		return 400
-	}
+// 	if create.ID == 0 {
+// 		log.Println("error after creating data")
+// 		return 500
+// 	}
 
-	post.Userid = userid
-	create := puc.postData.CreatePostData(post.ToModel())
+// 	return 200
+// }
 
-	if create.ID == 0 {
-		log.Println("error after creating data")
-		return 500
-	}
+// // UpdatePost implements domain.PostUseCase
+// func (puc *postUsecase) UpdatePost(newpost domain.Post, postid, userid int) int {
+// 	var post = data.FromModel(newpost)
+// 	validError := puc.validate.Struct(post)
 
-	return 200
-}
+// 	if validError != nil {
+// 		log.Println("Validation errror : ", validError)
+// 		return 400
+// 	}
+// 	post.ID = uint(postid)
+// 	post.Userid = userid
+// 	update := puc.postData.UpdatePostData(post.ToModel())
 
-// UpdatePost implements domain.PostUseCase
-func (puc *postUsecase) UpdatePost(newpost domain.Post, postid, userid int) int {
-	var post = data.FromModel(newpost)
-	validError := puc.validate.Struct(post)
+// 	if update.ID == 0 {
+// 		log.Println("Empty Data")
+// 		return 404
+// 	}
 
-	if validError != nil {
-		log.Println("Validation errror : ", validError)
-		return 400
-	}
-	post.ID = uint(postid)
-	post.Userid = userid
-	update := puc.postData.UpdatePostData(post.ToModel())
+// 	return 200
+// }
 
-	if update.ID == 0 {
-		log.Println("Empty Data")
-		return 404
-	}
+// // func (puc *postUsecase) ReadAllPost() ([]domain.Post, int) {
+// 	reads := puc.postData.ReadAllPostData()
 
-	return 200
-}
+// 	if len(reads) == 0 {
+// 		return nil, 404
+// 	}
 
+<<<<<<< HEAD
 func (puc *postUsecase) ReadAllPost() ([]domain.PostComent, int) {
 	reads := puc.postData.ReadAllPostData()
+=======
+// 	return reads, 200
+// }
+>>>>>>> 1926cfe99eaba56eb0c39fd5fc01ad8f5b43e333
 
-	if len(reads) == 0 {
-		return nil, 404
-	}
+// func (puc *postUsecase) ReadMyPost(userid int) ([]domain.Post, int) {
+// 	read := puc.postData.ReadMyPostData(userid)
 
-	return reads, 200
-}
+// 	if len(read) == 0 {
+// 		return nil, 404
+// 	}
 
-func (puc *postUsecase) ReadMyPost(userid int) ([]domain.Post, int) {
-	read := puc.postData.ReadMyPostData(userid)
-
-	if len(read) == 0 {
-		return nil, 404
-	}
-
-	return read, 200
-}
+// 	return read, 200
+// }
