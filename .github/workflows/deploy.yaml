@@ -2,11 +2,11 @@ name: CI
 
 # Controls when the workflow will run
 on:
-  pull_request_target:
+  #pull_request_target:
     types: ["closed"]
     branches: [ "main" ]
 
-jobs:
+#jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
