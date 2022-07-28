@@ -62,6 +62,7 @@ type PostData interface {
 =======
 >>>>>>> 2e06ba8 (fix conflict)
 	ReadAllCommentData() []CommentUser
+<<<<<<< HEAD
 	CheckUser(newpost Post) string
 <<<<<<< HEAD
 >>>>>>> b1af7c8 (unfinished posttesting)
@@ -69,4 +70,6 @@ type PostData interface {
 >>>>>>> aef8658 (unfinished posttesting)
 =======
 >>>>>>> 2e06ba8 (fix conflict)
+=======
+>>>>>>> f5449e8 (update semua fitur upload foto)
 }

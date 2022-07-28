@@ -7,6 +7,7 @@ import (
 	"sync"
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 	// 	"github.com/joho/godotenv"
 =======
 
@@ -15,6 +16,9 @@ import (
 =======
 	// 	"github.com/joho/godotenv"
 >>>>>>> 2e06ba8 (fix conflict)
+=======
+	// "github.com/joho/godotenv"
+>>>>>>> f5449e8 (update semua fitur upload foto)
 )
 
 type AppConfig struct {
@@ -24,6 +28,9 @@ type AppConfig struct {
 	Port     int
 	Username string
 	Password string
+	Keys3    string
+	Secrets3 string
+	Regions3 string
 }
 
 var lock = &sync.Mutex{}
@@ -42,6 +49,7 @@ func GetConfig() *AppConfig {
 
 func initConfig() *AppConfig {
 	var defaultConfig AppConfig
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 	// 	err := godotenv.Load("local.env")
@@ -66,6 +74,14 @@ func initConfig() *AppConfig {
 	// 		return nil
 	// 	}
 >>>>>>> 2e06ba8 (fix conflict)
+=======
+	// err := godotenv.Load("local.env")
+
+	// if err != nil {
+	// 	log.Fatal("Cannot read configuration")
+	// 	return nil
+	// }
+>>>>>>> f5449e8 (update semua fitur upload foto)
 	SECRET = os.Getenv("SECRET")
 	cnv, err := strconv.Atoi(os.Getenv("SERVERPORT"))
 	if err != nil {
@@ -105,6 +121,9 @@ func initConfig() *AppConfig {
 	}
 
 	defaultConfig.Port = cnv
+	defaultConfig.Keys3 = os.Getenv("Keys3")
+	defaultConfig.Secrets3 = os.Getenv("Secrets3")
+	defaultConfig.Regions3 = os.Getenv("Regions3")
 
 	return &defaultConfig
 }

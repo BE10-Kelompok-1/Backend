@@ -24,7 +24,7 @@ func InitFactory(e *echo.Echo, db *gorm.DB, awsConn *session.Session) {
 
 	userData := ud.New(db)
 	userCase := uc.New(userData, validator)
-	userHandler := udeli.New(userCase)
+	userHandler := udeli.New(userCase, userData, awsConn)
 	udeli.RouteUser(e, userHandler)
 
 	postData := pd.New(db)

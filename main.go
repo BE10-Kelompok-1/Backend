@@ -16,7 +16,7 @@ func main() {
 	mysql.MigrateData(db)
 	e := echo.New()
 
-	awsConn := awss3.InitS3("AKIA4OMEXK63GWCQQ4HC", "TDR4qqDP2OwjxNiLcRCrc1pVxuZK4G5DmTEA203P", "ap-southeast-1")
+	awsConn := awss3.InitS3(cfg.Keys3, cfg.Secrets3, cfg.Regions3)
 	factory.InitFactory(e, db, awsConn)
 
 	fmt.Println("Starting programm ...")

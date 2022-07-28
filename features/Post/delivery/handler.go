@@ -4,7 +4,6 @@ import (
 	"backend/domain"
 	"backend/features/common"
 	awss3 "backend/infrastructure/database/aws"
-	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -42,16 +41,13 @@ func (ph *postHandler) Create() echo.HandlerFunc {
 			})
 		}
 
-		name := ph.postData.CheckUser(newpost.ToModel())
-
 		file, err := c.FormFile("photo")
 
 		if err != nil {
 			log.Println(err)
 		}
 
-		filename := fmt.Sprintf("%s_postpic", name)
-		link := awss3.DoUpload(ph.conn, *file, filename)
+		link := awss3.DoUpload(ph.conn, *file, file.Filename)
 		newpost.Photo = link
 		status := ph.postUseCase.CreatePost(newpost.ToModel(), id)
 
@@ -88,7 +84,7 @@ func (ph *postHandler) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var newpost PostFormat
 		postid := c.Param("postid")
-		cnv, err := strconv.Atoi(postid)
+		id, err := strconv.Atoi(postid)
 
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -108,7 +104,15 @@ func (ph *postHandler) Update() echo.HandlerFunc {
 			})
 		}
 
-		status := ph.postUseCase.UpdatePost(newpost.ToModel(), cnv, userid)
+		file, err := c.FormFile("photo")
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		link := awss3.DoUpload(ph.conn, *file, file.Filename)
+		newpost.Photo = link
+		status := ph.postUseCase.UpdatePost(newpost.ToModel(), id, userid)
 
 		if status == 400 {
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
