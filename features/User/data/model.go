@@ -18,7 +18,7 @@ type User struct {
 	Birthdate    string          `json:"birthdate" form:"birthdate" validate:"required"`
 	Photoprofile string          `json:"photoprofile" form:"photoprofile"`
 	Posts        []postdata.Post `gorm:"foreignKey:Userid"`
-	// Comments     []commentdata.Comment `gorm:"foreignKey:Userid"`
+	Comments     []commentdata.Comment `gorm:"foreignKey:Userid"`
 }
 
 // type UserPosting struct {
