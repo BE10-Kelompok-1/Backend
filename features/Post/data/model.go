@@ -25,13 +25,16 @@ type PostComent struct {
 	Photo        string
 	Caption      string
 	CreatedAt    time.Time
-	Comments     []data.CommentUser `gorm:"foreignKey:Postid"`
-	// Idcoment           int
-	// Firstnamecoment    string
-	// Lastnamecoment     string
-	// Photoprofilecoment string
-	// Comment            string
-	// Created_at         time.Time
+}
+
+type CommentUser struct {
+	Id           int
+	Firstname    string
+	Lastname     string
+	Photoprofile string
+	Postid       int
+	Comment      string
+	Created_at   time.Time
 }
 
 func (p *Post) ToModel() domain.Post {
@@ -41,6 +44,18 @@ func (p *Post) ToModel() domain.Post {
 		Photo:     p.Photo,
 		Caption:   p.Caption,
 		CreatedAt: p.CreatedAt,
+	}
+}
+
+func (cu *CommentUser) ToCommentUser() domain.CommentUser {
+	return domain.CommentUser{
+		Id:           cu.Id,
+		Firstname:    cu.Firstname,
+		Lastname:     cu.Lastname,
+		Photoprofile: cu.Photoprofile,
+		Postid:       cu.Postid,
+		Comment:      cu.Comment,
+		Created_at:   cu.Created_at,
 	}
 }
 
@@ -54,12 +69,6 @@ func (pc *PostComent) ToPostComent() domain.PostComent {
 		Photo:        pc.Photo,
 		Caption:      pc.Caption,
 		CreatedAt:    pc.CreatedAt,
-		// Idcoment:           pc.Idcoment,
-		// Firstnamecoment:    pc.Firstnamecoment,
-		// Lastnamecoment:     pc.Photoprofilecoment,
-		// Photoprofilecoment: pc.Photoprofilecoment,
-		// Comment:            pc.Comment,
-		// Created_at:         pc.Created_at,
 	}
 }
 
@@ -78,6 +87,16 @@ func ParsePostCommentToArr(arr []PostComent) []domain.PostComent {
 
 	for _, val := range arr {
 		res = append(res, val.ToPostComent())
+	}
+
+	return res
+}
+
+func ParseCommentUserToArr(arr []CommentUser) []domain.CommentUser {
+	var res []domain.CommentUser
+
+	for _, val := range arr {
+		res = append(res, val.ToCommentUser())
 	}
 
 	return res

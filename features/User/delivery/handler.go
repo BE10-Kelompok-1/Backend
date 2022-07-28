@@ -114,7 +114,10 @@ func (uh *userHandler) Update() echo.HandlerFunc {
 func (uh *userHandler) Search() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		cnv := c.Param("username")
-		profile, status := uh.useUsecase.SearchUser(cnv)
+		profile, posting, comment, status := uh.useUsecase.SearchUser(cnv)
+
+		var comarrmap = []domain.CommentUser{}
+		var arrmap []map[string]interface{}
 
 		if status == 404 {
 			return c.JSON(http.StatusNotFound, map[string]interface{}{
@@ -130,12 +133,29 @@ func (uh *userHandler) Search() echo.HandlerFunc {
 			})
 		}
 
+		for i := 0; i < len(posting); i++ {
+			var res = map[string]interface{}{}
+			for j := 0; j < len(comment); j++ {
+				if posting[i].ID == comment[j].Postid {
+					comarrmap = append(comarrmap, comment[j])
+				}
+			}
+			res["id"] = posting[i].ID
+			res["photo"] = posting[i].Photo
+			res["caption"] = posting[i].Caption
+			res["created_at"] = posting[i].CreatedAt
+			res["comments"] = comarrmap
+
+			comarrmap = comarrmap[2:]
+			arrmap = append(arrmap, res)
+		}
+
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"photoprofile": profile.Photoprofile,
 			"firstname":    profile.Firstname,
 			"lastname":     profile.Lastname,
 			"usename":      profile.Username,
-			"posts":        profile.Posts,
+			"posts":        arrmap,
 			"code":         status,
 			"message":      "get data success",
 		})

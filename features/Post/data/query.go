@@ -49,33 +49,26 @@ func (pd *postData) UpdatePostData(newpost domain.Post) domain.Post {
 }
 
 func (pd *postData) ReadAllCommentData() []domain.CommentUser {
-	var com []domain.CommentUser
+	var com []CommentUser
 
-	err2 := pd.db.Model(&Post{}).Select("comments.id, users.firstname, users.lastname, users.photoprofile, comments.postid, comments.comment, comments.created_at").Joins("join comments on comments.postid = posts.id ").Joins("join users on comments.userid = users.id ").Find(&com)
+	err2 := pd.db.Model(&Post{}).Select("comments.id, users.firstname, users.lastname, users.photoprofile, comments.postid, comments.comment, comments.created_at").
+		Joins("join comments on comments.postid = posts.id ").Joins("join users on comments.userid = users.id ").Find(&com)
 
 	if err2.Error != nil {
 		log.Println("Cannot retrieve object", err2.Error)
 		return nil
 	}
 
-	return com
+	return ParseCommentUserToArr(com)
 }
 
 func (pd *postData) ReadAllPostData() []domain.PostComent {
 	var tmp []PostComent
-<<<<<<< HEAD
 	err := pd.db.Model(&Post{}).Select("posts.id, users.firstname, users.lastname, users.username, users.photoprofile, posts.photo, posts.caption, posts.created_at").
 		Joins("left join users on users.ID = posts.userid").Find(&tmp).Error
-	// err := pd.db.Model(&Post{}).Select("posts.id, users.firstname, users.lastname, users.username, users.photoprofile, posts.photo, posts.caption, posts.created_at, comments.id, users.firstname, users.lastname, users.photoprofile, comments.comment, comments.created_at").
-	// 	Joins("left joins users on users.ID = posts.userid").Joins("left joins comments on comments.userid = users.id").Find(&tmp).Error
-=======
->>>>>>> 0777a65b1b19d105d2f9f7839961a7e062c76388
 
-	// err := pd.db.Find(&tmp).Error
-	err := pd.db.Model(&Post{}).Select("posts.id, users.firstname, users.lastname, users.username, users.photoprofile, posts.photo, posts.caption, posts.created_at").Joins("left join users on users.ID = posts.userid").Find(&tmp)
-
-	if err.Error != nil {
-		log.Println("Cannot retrieve object", err.Error)
+	if err != nil {
+		log.Println("Cannot retrieve object", err.Error())
 		return nil
 	}
 
@@ -85,15 +78,4 @@ func (pd *postData) ReadAllPostData() []domain.PostComent {
 	}
 
 	return ParsePostCommentToArr(tmp)
-}
-
-func (pd *postData) ReadMyPostData(userid int) []domain.Post {
-	var tmp []Post
-	err := pd.db.Where("Userid = ?", userid).Find(&tmp).Error
-
-	if err != nil {
-		log.Println("There is problem with data")
-		return nil
-	}
-	return ParseToArr(tmp)
 }

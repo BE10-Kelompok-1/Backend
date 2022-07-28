@@ -149,39 +149,17 @@ func (ph *postHandler) ReadAll() echo.HandlerFunc {
 			res["caption"] = data[i].Caption
 			res["created_at"] = data[i].CreatedAt
 			res["comments"] = comarrmap
-			res["code"] = status
-			res["message"] = "get data success"
+			// res["code"] = status
+			// res["message"] = "get data success"
 
 			comarrmap = comarrmap[2:]
 			arrmap = append(arrmap, res)
 		}
 
-		return c.JSON(http.StatusOK, arrmap)
-	}
-}
-
-func (ph *postHandler) ReadMy() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		id := common.ExtractData(c)
-		data, status := ph.postUseCase.ReadMyPost(id)
-
-		if status == 404 {
-			return c.JSON(http.StatusNotFound, map[string]interface{}{
-				"code":    status,
-				"message": "Data not found",
-			})
-		}
-
-		if status == 500 {
-			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-				"code":    status,
-				"message": "There is an error in internal server",
-			})
-		}
-
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"data": data,
+			"posts":   arrmap,
+			"code":    status,
+			"message": "get data success",
 		})
-
 	}
 }
