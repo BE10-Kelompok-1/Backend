@@ -45,6 +45,10 @@ type PostData interface {
 	CreatePostData(newpost Post) Post
 	UpdatePostData(newpost Post) Post
 	ReadAllPostData() []PostComent
+<<<<<<< HEAD
+=======
+	ReadMyPostData(userid int) []Post
+>>>>>>> 2e06ba8 (fix conflict)
 	ReadAllCommentData() []CommentUser
 <<<<<<< HEAD
 	DeletePostData(postid, userid int) bool
