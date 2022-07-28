@@ -13,12 +13,12 @@ type postUsecase struct {
 	validate *validator.Validate
 }
 
-func New(pd domain.PostData, v *validator.Validate) domain.PostUseCase {
-	return &postUsecase{
-		postData: pd,
-		validate: v,
-	}
-}
+// func New(pd domain.PostData, v *validator.Validate) domain.PostUseCase {
+// 	return &postUsecase{
+// 		postData: pd,
+// 		validate: v,
+// 	}
+// }
 
 // CreatePost implements domain.PostUseCase
 func (puc *postUsecase) CreatePost(newpost domain.Post, userid int) int {
@@ -62,15 +62,15 @@ func (puc *postUsecase) UpdatePost(newpost domain.Post, postid, userid int) int 
 	return 200
 }
 
-func (puc *postUsecase) ReadAllPost() ([]domain.Post, int) {
-	reads := puc.postData.ReadAllPostData()
+// func (puc *postUsecase) ReadAllPost() ([]domain.Post, int) {
+// 	reads := puc.postData.ReadAllPostData()
 
-	if len(reads) == 0 {
-		return nil, 404
-	}
+// 	if len(reads) == 0 {
+// 		return nil, 404
+// 	}
 
-	return reads, 200
-}
+// 	return reads, 200
+// }
 
 func (puc *postUsecase) ReadMyPost(userid int) ([]domain.Post, int) {
 	read := puc.postData.ReadMyPostData(userid)
