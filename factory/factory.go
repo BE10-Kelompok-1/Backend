@@ -5,13 +5,13 @@ import (
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 
-	ud "backend/features/User/data"
-	udeli "backend/features/User/delivery"
-	uc "backend/features/User/usecase"
-
 	pd "backend/features/Post/data"
 	pdeli "backend/features/Post/delivery"
 	pc "backend/features/Post/usecase"
+
+	ud "backend/features/User/data"
+	udeli "backend/features/User/delivery"
+	uc "backend/features/User/usecase"
 
 	cd "backend/features/Comment/data"
 	cdeli "backend/features/Comment/delivery"

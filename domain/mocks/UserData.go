@@ -110,14 +110,14 @@ func (_m *UserData) SearchUserPostingData(username string) []domain.UserPosting 
 	return r0
 }
 
-func (_m *UserData) SearchUserPostingCommentData(username string) []domain.UserPostingComment {
+func (_m *UserData) SearchUserPostingCommentData(username string) []domain.CommentUser {
 	ret := _m.Called(username)
 
-	var r0 []domain.UserPostingComment
-	if rf, ok := ret.Get(1).(func(string) []domain.UserPostingComment); ok {
+	var r0 []domain.CommentUser
+	if rf, ok := ret.Get(1).(func(string) []domain.CommentUser); ok {
 		r0 = rf(username)
 	} else {
-		r0 = ret.Get(1).([]domain.UserPostingComment)
+		r0 = ret.Get(1).([]domain.CommentUser)
 	}
 
 	return r0

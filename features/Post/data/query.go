@@ -48,10 +48,24 @@ func (pd *postData) UpdatePostData(newpost domain.Post) domain.Post {
 	return post.ToModel()
 }
 
+func (pd *postData) ReadAllCommentData() []domain.CommentUser {
+	var com []CommentUser
+
+	err2 := pd.db.Model(&Post{}).Order("comments.id DESC").Select("comments.id, users.firstname, users.lastname, users.photoprofile, comments.postid, comments.comment, comments.created_at").
+		Joins("join comments on comments.postid = posts.id ").Joins("join users on comments.userid = users.id ").Find(&com).Limit(50)
+
+	if err2.Error != nil {
+		log.Println("Cannot retrieve object", err2.Error)
+		return nil
+	}
+
+	return ParseCommentUserToArr(com)
+}
+
 func (pd *postData) ReadAllPostData() []domain.PostComent {
 	var tmp []PostComent
-	err := pd.db.Find(&tmp).Error
-	//err := pd.db.Model(&Post{}).Select("comments.id, users.firstname, users.lastname, users.username, users.photoprofile, posts.photo, posts.caption, posts.created_at, comments.id, comments.comment, comments.created_at").Joins("left join users on users.ID = comments.userid").Find(&data)
+	err := pd.db.Model(&Post{}).Order("posts.id DESC").Select("posts.id, users.firstname, users.lastname, users.username, users.photoprofile, posts.photo, posts.caption, posts.created_at").
+		Joins("left join users on users.ID = posts.userid").Find(&tmp).Limit(50).Error
 
 	if err != nil {
 		log.Println("Cannot retrieve object", err.Error())
@@ -64,15 +78,4 @@ func (pd *postData) ReadAllPostData() []domain.PostComent {
 	}
 
 	return ParsePostCommentToArr(tmp)
-}
-
-func (pd *postData) ReadMyPostData(userid int) []domain.Post {
-	var tmp []Post
-	err := pd.db.Where("Userid = ?", userid).Find(&tmp).Error
-
-	if err != nil {
-		log.Println("There is problem with data")
-		return nil
-	}
-	return ParseToArr(tmp)
 }

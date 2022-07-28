@@ -1,6 +1,8 @@
 package delivery
 
-import "backend/domain"
+import (
+	"backend/domain"
+)
 
 type PostFormat struct {
 	Userid  int

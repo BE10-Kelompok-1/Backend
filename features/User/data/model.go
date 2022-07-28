@@ -2,6 +2,8 @@ package data
 
 import (
 	"backend/domain"
+	"time"
+
 	//commentdata "backend/features/Comment/data"
 	postdata "backend/features/Post/data"
 
@@ -18,28 +20,24 @@ type User struct {
 	Birthdate    string          `json:"birthdate" form:"birthdate" validate:"required"`
 	Photoprofile string          `json:"photoprofile" form:"photoprofile"`
 	Posts        []postdata.Post `gorm:"foreignKey:Userid"`
-	// Comments     []commentdata.Comment `gorm:"foreignKey:Userid"`
 }
 
-// type UserPosting struct {
-// 	UserID    uint
-// 	PostID    int
-// 	Photo     string
-// 	Caption   string
-// 	CreatedAt time.Time
-// 	Posts     []postdata.Post `gorm:"foreignKey:Userid"`
-// }
+type UserPosting struct {
+	ID        int
+	Photo     string
+	Caption   string
+	CreatedAt time.Time
+}
 
-// type UserPostingComment struct {
-// 	PostID       int
-// 	CommentID    int
-// 	Firstname    string
-// 	Lastname     string
-// 	Photoprofile string
-// 	Comment      string
-// 	CreatedAt    time.Time
-// 	Comments     []commentdata.Comment `gorm:"foreignKey:Userid"`
-// }
+type CommentUser struct {
+	Id           int
+	Firstname    string
+	Lastname     string
+	Photoprofile string
+	Postid       int
+	Comment      string
+	Created_at   time.Time
+}
 
 func (u *User) ToModel() domain.User {
 	return domain.User{
@@ -54,25 +52,26 @@ func (u *User) ToModel() domain.User {
 	}
 }
 
-// func (up *UserPosting) ToUserPosting() domain.UserPosting {
-// 	return domain.UserPosting{
-// 		PostID:    int(up.PostID),
-// 		Photo:     up.Photo,
-// 		Caption:   up.Caption,
-// 		CreatedAt: up.CreatedAt,
-// 	}
-// }
+func (up *UserPosting) ToUserPosting() domain.UserPosting {
+	return domain.UserPosting{
+		ID:        up.ID,
+		Photo:     up.Photo,
+		Caption:   up.Caption,
+		CreatedAt: up.CreatedAt,
+	}
+}
 
-// func (upc *UserPostingComment) ToUserPostingComment() domain.UserPostingComment {
-// 	return domain.UserPostingComment{
-// 		CommentID:    int(upc.CommentID),
-// 		Firstname:    upc.Firstname,
-// 		Lastname:     upc.Lastname,
-// 		Photoprofile: upc.Photoprofile,
-// 		Comment:      upc.Comment,
-// 		CreatedAt:    upc.CreatedAt,
-// 	}
-// }
+func (cu *CommentUser) ToCommentUser() domain.CommentUser {
+	return domain.CommentUser{
+		Id:           cu.Id,
+		Firstname:    cu.Firstname,
+		Lastname:     cu.Lastname,
+		Photoprofile: cu.Photoprofile,
+		Postid:       cu.Postid,
+		Comment:      cu.Comment,
+		Created_at:   cu.Created_at,
+	}
+}
 
 func ParseToArr(arr []User) []domain.User {
 	var res []domain.User
@@ -84,25 +83,25 @@ func ParseToArr(arr []User) []domain.User {
 	return res
 }
 
-// func ParseUserPostingToArr(arr []UserPosting) []domain.UserPosting {
-// 	var res []domain.UserPosting
+func ParseUserPostingToArr(arr []UserPosting) []domain.UserPosting {
+	var res []domain.UserPosting
 
-// 	for _, val := range arr {
-// 		res = append(res, val.ToUserPosting())
-// 	}
+	for _, val := range arr {
+		res = append(res, val.ToUserPosting())
+	}
 
-// 	return res
-// }
+	return res
+}
 
-// func ParseUserPostingCommentToArr(arr []UserPostingComment) []domain.UserPostingComment {
-// 	var res []domain.UserPostingComment
+func ParseCommentUserToArr(arr []CommentUser) []domain.CommentUser {
+	var res []domain.CommentUser
 
-// 	for _, val := range arr {
-// 		res = append(res, val.ToUserPostingComment())
-// 	}
+	for _, val := range arr {
+		res = append(res, val.ToCommentUser())
+	}
 
-// 	return res
-// }
+	return res
+}
 
 func FromModel(data domain.User) User {
 	var res User

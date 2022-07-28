@@ -115,7 +115,10 @@ func (ph *postHandler) Update() echo.HandlerFunc {
 
 func (ph *postHandler) ReadAll() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		data, status := ph.postUseCase.ReadAllPost()
+		data, datacom, status := ph.postUseCase.ReadAllPost()
+
+		var comarrmap = []domain.CommentUser{}
+		var arrmap []map[string]interface{}
 
 		if status == 404 {
 			return c.JSON(http.StatusNotFound, map[string]interface{}{
@@ -131,36 +134,32 @@ func (ph *postHandler) ReadAll() echo.HandlerFunc {
 			})
 		}
 
+		for i := 0; i < len(data); i++ {
+			var res = map[string]interface{}{}
+			for j := 0; j < len(datacom); j++ {
+				if data[i].ID == datacom[j].Postid {
+					comarrmap = append(comarrmap, datacom[j])
+				}
+			}
+			res["id"] = data[i].ID
+			res["firstname"] = data[i].Firstname
+			res["lastname"] = data[i].Lastname
+			res["photoprofile"] = data[i].Photoprofile
+			res["photo"] = data[i].Photo
+			res["caption"] = data[i].Caption
+			res["created_at"] = data[i].CreatedAt
+			res["comments"] = comarrmap
+			// res["code"] = status
+			// res["message"] = "get data success"
+
+			comarrmap = comarrmap[2:]
+			arrmap = append(arrmap, res)
+		}
+
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"data":    data,
+			"posts":   arrmap,
 			"code":    status,
 			"message": "get data success",
 		})
-	}
-}
-
-func (ph *postHandler) ReadMy() echo.HandlerFunc {
-	return func(c echo.Context) error {
-		id := common.ExtractData(c)
-		data, status := ph.postUseCase.ReadMyPost(id)
-
-		if status == 404 {
-			return c.JSON(http.StatusNotFound, map[string]interface{}{
-				"code":    status,
-				"message": "Data not found",
-			})
-		}
-
-		if status == 500 {
-			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-				"code":    status,
-				"message": "There is an error in internal server",
-			})
-		}
-
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"data": data,
-		})
-
 	}
 }

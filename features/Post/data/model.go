@@ -11,18 +11,30 @@ import (
 type Post struct {
 	gorm.Model
 	Userid   int
-	Photo    string             `json:"photo" form:"photo"`
-	Caption  string             `json:"caption" form:"caption" validate:"required"`
-	Comments []data.CommentUser `gorm:"foreignKey:Postid"`
+	Photo    string         `json:"photo" form:"photo"`
+	Caption  string         `json:"caption" form:"caption" validate:"required"`
+	Comments []data.Comment `gorm:"foreignKey:Postid"`
 }
 
 type PostComent struct {
 	ID           int
 	Firstname    string
 	Lastname     string
+	Username     string
 	Photoprofile string
-	Comments     []data.CommentUser `gorm:"foreignKey:Postid"`
+	Photo        string
+	Caption      string
 	CreatedAt    time.Time
+}
+
+type CommentUser struct {
+	Id           int
+	Firstname    string
+	Lastname     string
+	Photoprofile string
+	Postid       int
+	Comment      string
+	Created_at   time.Time
 }
 
 func (p *Post) ToModel() domain.Post {
@@ -35,12 +47,27 @@ func (p *Post) ToModel() domain.Post {
 	}
 }
 
+func (cu *CommentUser) ToCommentUser() domain.CommentUser {
+	return domain.CommentUser{
+		Id:           cu.Id,
+		Firstname:    cu.Firstname,
+		Lastname:     cu.Lastname,
+		Photoprofile: cu.Photoprofile,
+		Postid:       cu.Postid,
+		Comment:      cu.Comment,
+		Created_at:   cu.Created_at,
+	}
+}
+
 func (pc *PostComent) ToPostComent() domain.PostComent {
 	return domain.PostComent{
 		ID:           pc.ID,
 		Firstname:    pc.Firstname,
 		Lastname:     pc.Lastname,
+		Username:     pc.Username,
 		Photoprofile: pc.Photoprofile,
+		Photo:        pc.Photo,
+		Caption:      pc.Caption,
 		CreatedAt:    pc.CreatedAt,
 	}
 }
@@ -60,6 +87,16 @@ func ParsePostCommentToArr(arr []PostComent) []domain.PostComent {
 
 	for _, val := range arr {
 		res = append(res, val.ToPostComent())
+	}
+
+	return res
+}
+
+func ParseCommentUserToArr(arr []CommentUser) []domain.CommentUser {
+	var res []domain.CommentUser
+
+	for _, val := range arr {
+		res = append(res, val.ToCommentUser())
 	}
 
 	return res

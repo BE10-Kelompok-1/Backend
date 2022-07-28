@@ -32,7 +32,8 @@ func (cd *commentData) CreateCommentData(newcomment domain.Comment) domain.Comme
 
 func (cd *commentData) ReadCommentData() []domain.CommentUser {
 	var data []CommentUser
-	err := cd.db.Model(&Comment{}).Select("comments.id, users.firstname, users.lastname, users.photoprofile, comments.postid, comments.comment, comments.created_at").Joins("left join users on users.ID = comments.userid").Find(&data)
+	err := cd.db.Model(&Comment{}).Order("comments.id DESC").Select("comments.id, users.firstname, users.lastname, users.photoprofile, comments.postid, comments.comment, comments.created_at").
+		Joins("left join users on users.ID = comments.userid").Find(&data).Limit(50)
 	if err.Error != nil {
 		log.Println("error on select data", err.Error.Error())
 		return nil

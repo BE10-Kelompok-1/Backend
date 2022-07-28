@@ -198,7 +198,8 @@ func TestDeleteUser(t *testing.T) {
 	})
 }
 
-func TestSearchUserPostingData(t *testing.T)        {}
+func TestSearchUserPostingData(t *testing.T) {}
+
 func TestSearchUserPostingCommentData(t *testing.T) {}
 
 func TestProfileUserData(t *testing.T) {}

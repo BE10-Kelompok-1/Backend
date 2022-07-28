@@ -62,22 +62,14 @@ func (puc *postUsecase) UpdatePost(newpost domain.Post, postid, userid int) int 
 	return 200
 }
 
-func (puc *postUsecase) ReadAllPost() ([]domain.Post, int) {
+func (puc *postUsecase) ReadAllPost() ([]domain.PostComent, []domain.CommentUser, int) {
+	readcom := puc.postData.ReadAllCommentData()
+
 	reads := puc.postData.ReadAllPostData()
 
 	if len(reads) == 0 {
-		return nil, 404
+		return nil, nil, 404
 	}
 
-	return reads, 200
-}
-
-func (puc *postUsecase) ReadMyPost(userid int) ([]domain.Post, int) {
-	read := puc.postData.ReadMyPostData(userid)
-
-	if len(read) == 0 {
-		return nil, 404
-	}
-
-	return read, 200
+	return reads, readcom, 200
 }
