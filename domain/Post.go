@@ -47,5 +47,4 @@ type PostData interface {
 	ReadAllPostData() []PostComent
 	ReadAllCommentData() []CommentUser
 	DeletePostData(postid, userid int) bool
-	CheckUser(newpost Post) string
 }

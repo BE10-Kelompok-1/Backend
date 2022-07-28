@@ -3,7 +3,7 @@ module backend
 go 1.18
 
 require (
-	github.com/aws/aws-sdk-go v1.44.63 // indirect
+	github.com/aws/aws-sdk-go v1.44.65 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
