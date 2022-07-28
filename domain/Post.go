@@ -31,12 +31,14 @@ type PostHandler interface {
 	Create() echo.HandlerFunc
 	Update() echo.HandlerFunc
 	ReadAll() echo.HandlerFunc
+	Delete() echo.HandlerFunc
 }
 
 type PostUseCase interface {
 	CreatePost(newpost Post, userid int) int
 	UpdatePost(newpost Post, postid, userid int) int
 	ReadAllPost() ([]PostComent, []CommentUser, int)
+	DeletePost(postid, userid int) int
 }
 
 type PostData interface {
@@ -44,4 +46,5 @@ type PostData interface {
 	UpdatePostData(newpost Post) Post
 	ReadAllPostData() []PostComent
 	ReadAllCommentData() []CommentUser
+	DeletePostData(postid, userid int) bool
 }
