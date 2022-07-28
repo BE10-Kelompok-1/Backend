@@ -5,6 +5,10 @@ import (
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 
+	pd "backend/features/Post/data"
+	pdeli "backend/features/Post/delivery"
+	pc "backend/features/Post/usecase"
+
 	ud "backend/features/User/data"
 	udeli "backend/features/User/delivery"
 	uc "backend/features/User/usecase"
@@ -22,10 +26,10 @@ func InitFactory(e *echo.Echo, db *gorm.DB) {
 	userHandler := udeli.New(userCase)
 	udeli.RouteUser(e, userHandler)
 
-	// postData := pd.New(db)
-	// postCase := pc.New(postData, validator)
-	// postHandler := pdeli.New(postCase)
-	// pdeli.RoutePost(e, postHandler)
+	postData := pd.New(db)
+	postCase := pc.New(postData, validator)
+	postHandler := pdeli.New(postCase)
+	pdeli.RoutePost(e, postHandler)
 
 	commentData := cd.New(db)
 	commentCase := cc.New(commentData, validator)
