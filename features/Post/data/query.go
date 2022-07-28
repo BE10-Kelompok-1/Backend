@@ -48,9 +48,10 @@ func (pd *postData) UpdatePostData(newpost domain.Post) domain.Post {
 	return post.ToModel()
 }
 
-func (pd *postData) ReadAllPostData() []domain.Post {
-	var tmp []Post
+func (pd *postData) ReadAllPostData() []domain.PostComent {
+	var tmp []PostComent
 	err := pd.db.Find(&tmp).Error
+	//err := pd.db.Model(&Post{}).Select("comments.id, users.firstname, users.lastname, users.username, users.photoprofile, posts.photo, posts.caption, posts.created_at, comments.id, comments.comment, comments.created_at").Joins("left join users on users.ID = comments.userid").Find(&data)
 
 	if err != nil {
 		log.Println("Cannot retrieve object", err.Error())
@@ -62,7 +63,7 @@ func (pd *postData) ReadAllPostData() []domain.Post {
 		return nil
 	}
 
-	return ParseToArr(tmp)
+	return ParsePostCommentToArr(tmp)
 }
 
 func (pd *postData) ReadMyPostData(userid int) []domain.Post {

@@ -18,4 +18,5 @@ func RouteComment(e *echo.Echo, ch domain.CommentHandler) {
 
 	comment := e.Group("/comments")
 	comment.POST("", ch.Create(), middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET))))
+	comment.GET("", ch.Read())
 }
