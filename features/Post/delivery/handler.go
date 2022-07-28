@@ -170,7 +170,7 @@ func (ph *postHandler) ReadAll() echo.HandlerFunc {
 			// res["code"] = status
 			// res["message"] = "get data success"
 
-			comarrmap = comarrmap[2:]
+			comarrmap = comarrmap[len(comarrmap):]
 			arrmap = append(arrmap, res)
 		}
 
