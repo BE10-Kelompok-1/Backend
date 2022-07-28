@@ -6,11 +6,15 @@ import (
 	"strconv"
 	"sync"
 <<<<<<< HEAD
+<<<<<<< HEAD
 	// 	"github.com/joho/godotenv"
 =======
 
 // 	"github.com/joho/godotenv"
 >>>>>>> 49057f1 (Update config.go)
+=======
+	// 	"github.com/joho/godotenv"
+>>>>>>> 2e06ba8 (fix conflict)
 )
 
 type AppConfig struct {
@@ -39,6 +43,7 @@ func GetConfig() *AppConfig {
 func initConfig() *AppConfig {
 	var defaultConfig AppConfig
 <<<<<<< HEAD
+<<<<<<< HEAD
 	// 	err := godotenv.Load("local.env")
 
 	// 	if err != nil {
@@ -53,6 +58,14 @@ func initConfig() *AppConfig {
 // 		return nil
 // 	}
 >>>>>>> 49057f1 (Update config.go)
+=======
+	// 	err := godotenv.Load("local.env")
+
+	// 	if err != nil {
+	// 		log.Fatal("Cannot read configuration")
+	// 		return nil
+	// 	}
+>>>>>>> 2e06ba8 (fix conflict)
 	SECRET = os.Getenv("SECRET")
 	cnv, err := strconv.Atoi(os.Getenv("SERVERPORT"))
 	if err != nil {
@@ -65,6 +78,7 @@ func initConfig() *AppConfig {
 	defaultConfig.Username = os.Getenv("DB_USERNAME")
 	defaultConfig.Password = os.Getenv("DB_PASSWORD")
 	defaultConfig.Address = os.Getenv("Address")
+<<<<<<< HEAD
 <<<<<<< HEAD
 	cnv, err = strconv.Atoi(os.Getenv("DB_PORT"))
 =======
@@ -82,6 +96,9 @@ func initConfig() *AppConfig {
 	cnv, err = strconv.Atoi(os.Getenv("DB_PORT"))
 >>>>>>> b1af7c8 (unfinished posttesting)
 >>>>>>> aef8658 (unfinished posttesting)
+=======
+	cnv, err = strconv.Atoi(os.Getenv("DB_PORT"))
+>>>>>>> 2e06ba8 (fix conflict)
 	if err != nil {
 		log.Fatal("Cannot parse DB Port variable")
 		return nil
