@@ -116,7 +116,10 @@ func (ph *postHandler) Update() echo.HandlerFunc {
 func (ph *postHandler) ReadAll() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		data, datacom, status := ph.postUseCase.ReadAllPost()
+
+		var comarrmap = []domain.CommentUser{}
 		var arrmap []map[string]interface{}
+
 		if status == 404 {
 			return c.JSON(http.StatusNotFound, map[string]interface{}{
 				"code":    status,
@@ -132,18 +135,24 @@ func (ph *postHandler) ReadAll() echo.HandlerFunc {
 		}
 
 		for i := 0; i < len(data); i++ {
-			res := map[string]interface{}{
-				"id":           data[i].ID,
-				"firstname":    data[i].Firstname,
-				"lastname":     data[i].Lastname,
-				"photoprofile": data[i].Photoprofile,
-				"photo":        data[i].Photo,
-				"caption":      data[i].Caption,
-				"created_at":   data[i].CreatedAt,
-				"comments":     datacom,
-				"code":         status,
-				"message":      "get data success",
+			var res = map[string]interface{}{}
+			for j := 0; j < len(datacom); j++ {
+				if data[i].ID == datacom[j].Postid {
+					comarrmap = append(comarrmap, datacom[j])
+				}
 			}
+			res["id"] = data[i].ID
+			res["firstname"] = data[i].Firstname
+			res["lastname"] = data[i].Lastname
+			res["photoprofile"] = data[i].Photoprofile
+			res["photo"] = data[i].Photo
+			res["caption"] = data[i].Caption
+			res["created_at"] = data[i].CreatedAt
+			res["comments"] = comarrmap
+			res["code"] = status
+			res["message"] = "get data success"
+
+			comarrmap = comarrmap[2:]
 			arrmap = append(arrmap, res)
 		}
 

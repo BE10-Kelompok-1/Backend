@@ -22,7 +22,6 @@ type PostComent struct {
 	Photoprofile string
 	Photo        string
 	Caption      string
-	Comments     []CommentUser
 	CreatedAt    time.Time
 }
 
