@@ -5,7 +5,7 @@ import (
 	"os"
 	"strconv"
 	"sync"
-	// 	"github.com/joho/godotenv"
+	// "github.com/joho/godotenv"
 )
 
 type AppConfig struct {
@@ -15,6 +15,9 @@ type AppConfig struct {
 	Port     int
 	Username string
 	Password string
+	Keys3    string
+	Secrets3 string
+	Regions3 string
 }
 
 var lock = &sync.Mutex{}
@@ -33,12 +36,12 @@ func GetConfig() *AppConfig {
 
 func initConfig() *AppConfig {
 	var defaultConfig AppConfig
-	// 	err := godotenv.Load("local.env")
+	// err := godotenv.Load("local.env")
 
-	// 	if err != nil {
-	// 		log.Fatal("Cannot read configuration")
-	// 		return nil
-	// 	}
+	// if err != nil {
+	// 	log.Fatal("Cannot read configuration")
+	// 	return nil
+	// }
 	SECRET = os.Getenv("SECRET")
 	cnv, err := strconv.Atoi(os.Getenv("SERVERPORT"))
 	if err != nil {
@@ -58,6 +61,9 @@ func initConfig() *AppConfig {
 	}
 
 	defaultConfig.Port = cnv
+	defaultConfig.Keys3 = os.Getenv("Keys3")
+	defaultConfig.Secrets3 = os.Getenv("Secrets3")
+	defaultConfig.Regions3 = os.Getenv("Regions3")
 
 	return &defaultConfig
 }

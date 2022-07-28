@@ -48,5 +48,4 @@ type PostData interface {
 	ReadMyPostData(userid int) []Post
 >>>>>>> 2e06ba8 (fix conflict)
 	ReadAllCommentData() []CommentUser
-	CheckUser(newpost Post) string
 }

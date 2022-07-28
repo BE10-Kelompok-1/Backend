@@ -1,6 +1,7 @@
 package aws
 
 import (
+	"fmt"
 	"mime/multipart"
 	"net/http"
 
@@ -50,5 +51,6 @@ func DoUpload(sess *session.Session, file multipart.FileHeader, filename string)
 		log.Info(res)
 		log.Error("Upload error : ", err)
 	}
-	return ""
+	link := fmt.Sprint("https://be10-file.s3.ap-southeast-1.amazonaws.com/", filename)
+	return link
 }
