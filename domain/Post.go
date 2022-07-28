@@ -46,4 +46,5 @@ type PostData interface {
 	ReadAllPostData() []PostComent
 	ReadMyPostData(userid int) []Post
 	ReadAllCommentData() []CommentUser
+	CheckUser(newpost Post) string
 }
