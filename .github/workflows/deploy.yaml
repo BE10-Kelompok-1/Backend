@@ -10,10 +10,6 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> fd09f20 (Update deploy.yaml)
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -29,13 +25,6 @@ jobs:
       -
         name: Build and push
         uses: docker/build-push-action@v3
-<<<<<<< HEAD
-=======
-      - name: executing deploy to server using remote ssh key
-        uses: appleboy/ssh-action@master
->>>>>>> f3f3610 (Update deploy.yaml)
-=======
->>>>>>> fd09f20 (Update deploy.yaml)
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
