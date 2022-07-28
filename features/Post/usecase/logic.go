@@ -61,13 +61,8 @@ package usecase
 // 		return nil, 404
 // 	}
 
-<<<<<<< HEAD
-func (puc *postUsecase) ReadAllPost() ([]domain.PostComent, int) {
-	reads := puc.postData.ReadAllPostData()
-=======
 // 	return reads, 200
 // }
->>>>>>> 1926cfe99eaba56eb0c39fd5fc01ad8f5b43e333
 
 // func (puc *postUsecase) ReadMyPost(userid int) ([]domain.Post, int) {
 // 	read := puc.postData.ReadMyPostData(userid)
