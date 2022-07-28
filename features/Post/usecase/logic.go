@@ -62,7 +62,7 @@ func (puc *postUsecase) UpdatePost(newpost domain.Post, postid, userid int) int 
 	return 200
 }
 
-func (puc *postUsecase) ReadAllPost() ([]domain.Post, int) {
+func (puc *postUsecase) ReadAllPost() ([]domain.PostComent, int) {
 	reads := puc.postData.ReadAllPostData()
 
 	if len(reads) == 0 {
