@@ -40,3 +40,13 @@ func (cuc *commentUsecase) CreateComment(newcomment domain.Comment, userid int) 
 
 	return 200
 }
+
+func (cuc *commentUsecase) ReadComment() ([]domain.CommentUser, int) {
+	reads := cuc.commentData.ReadCommentData()
+
+	if len(reads) == 0 {
+		return nil, 404
+	}
+
+	return reads, 200
+}
