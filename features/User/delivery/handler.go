@@ -3,19 +3,26 @@ package delivery
 import (
 	"backend/domain"
 	"backend/features/common"
+	awss3 "backend/infrastructure/database/aws"
+	"fmt"
 	"log"
 	"net/http"
 
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/labstack/echo/v4"
 )
 
 type userHandler struct {
 	useUsecase domain.UserUseCase
+	userdata   domain.UserData
+	conn       *session.Session
 }
 
-func New(uuc domain.UserUseCase) domain.UserHandler {
+func New(uuc domain.UserUseCase, ud domain.UserData, aws *session.Session) domain.UserHandler {
 	return &userHandler{
 		useUsecase: uuc,
+		userdata:   ud,
+		conn:       aws,
 	}
 }
 
@@ -33,6 +40,17 @@ func (uh *userHandler) Register() echo.HandlerFunc {
 				"message": "There is an error in internal server",
 			})
 		}
+
+		file, err := c.FormFile("photoprofile")
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		filename := fmt.Sprintf("%s_profilepic.jpg", newuser.Username)
+		log.Println(filename)
+		link := awss3.DoUpload(uh.conn, *file, filename)
+		newuser.Photoprofile = link
 
 		status := uh.useUsecase.RegisterUser(newuser.ToModel(), cost)
 
@@ -81,6 +99,16 @@ func (uh *userHandler) Update() echo.HandlerFunc {
 			})
 		}
 
+		file, err := c.FormFile("photoprofile")
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		filename := fmt.Sprintf("%s_profilepic.jpg", newuser.Username)
+		log.Println(filename)
+		link := awss3.DoUpload(uh.conn, *file, filename)
+		newuser.Photoprofile = link
 		status := uh.useUsecase.UpdateUser(newuser.ToModel(), id, cost)
 
 		if status == 400 {

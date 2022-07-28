@@ -17,20 +17,6 @@ func New(db *gorm.DB) domain.PostData {
 	}
 }
 
-func (pd *postData) CheckUser(newpost domain.Post) string {
-	var post = FromModel(newpost)
-	var name string
-	err := pd.db.Model(&Post{}).Select("users.username").Joins("join users on posts.userid = users.id").
-		Where("userid = ?", post.Userid).Limit(1).Scan(&name)
-
-	if err.Error != nil {
-		log.Println("error find data")
-		return ""
-	}
-
-	return name
-}
-
 // CreatePostData implements domain.PostData
 func (pd *postData) CreatePostData(newpost domain.Post) domain.Post {
 	var post = FromModel(newpost)
