@@ -11,9 +11,9 @@ import (
 type Post struct {
 	gorm.Model
 	Userid   int
-	Photo    string             `json:"photo" form:"photo"`
-	Caption  string             `json:"caption" form:"caption" validate:"required"`
-	Comments []data.CommentUser `gorm:"foreignKey:Postid"`
+	Photo    string         `json:"photo" form:"photo"`
+	Caption  string         `json:"caption" form:"caption" validate:"required"`
+	Comments []data.Comment `gorm:"foreignKey:Postid"`
 }
 
 type PostComent struct {
@@ -21,7 +21,8 @@ type PostComent struct {
 	Firstname    string
 	Lastname     string
 	Photoprofile string
-	Comments     []data.CommentUser `gorm:"foreignKey:Postid"`
+	Photo        string
+	Caption      string
 	CreatedAt    time.Time
 }
 
@@ -41,6 +42,8 @@ func (pc *PostComent) ToPostComent() domain.PostComent {
 		Firstname:    pc.Firstname,
 		Lastname:     pc.Lastname,
 		Photoprofile: pc.Photoprofile,
+		Photo:        pc.Photo,
+		Caption:      pc.Caption,
 		CreatedAt:    pc.CreatedAt,
 	}
 }

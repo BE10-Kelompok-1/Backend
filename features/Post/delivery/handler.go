@@ -115,8 +115,8 @@ func (ph *postHandler) Update() echo.HandlerFunc {
 
 func (ph *postHandler) ReadAll() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		data, status := ph.postUseCase.ReadAllPost()
-
+		data, datacom, status := ph.postUseCase.ReadAllPost()
+		var arrmap []map[string]interface{}
 		if status == 404 {
 			return c.JSON(http.StatusNotFound, map[string]interface{}{
 				"code":    status,
@@ -131,11 +131,23 @@ func (ph *postHandler) ReadAll() echo.HandlerFunc {
 			})
 		}
 
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"data":    data,
-			"code":    status,
-			"message": "get data success",
-		})
+		for i := 0; i < len(data); i++ {
+			res := map[string]interface{}{
+				"id":           data[i].ID,
+				"firstname":    data[i].Firstname,
+				"lastname":     data[i].Lastname,
+				"photoprofile": data[i].Photoprofile,
+				"photo":        data[i].Photo,
+				"caption":      data[i].Caption,
+				"created_at":   data[i].CreatedAt,
+				"comments":     datacom,
+				"code":         status,
+				"message":      "get data success",
+			}
+			arrmap = append(arrmap, res)
+		}
+
+		return c.JSON(http.StatusOK, arrmap)
 	}
 }
 

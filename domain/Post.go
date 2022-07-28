@@ -12,7 +12,7 @@ type Post struct {
 	Photo     string
 	Caption   string
 	CreatedAt time.Time
-	Comments  []CommentUser
+	Comments  []Comment
 }
 
 type PostComent struct {
@@ -20,6 +20,8 @@ type PostComent struct {
 	Firstname    string
 	Lastname     string
 	Photoprofile string
+	Photo        string
+	Caption      string
 	Comments     []CommentUser
 	CreatedAt    time.Time
 }
@@ -34,7 +36,7 @@ type PostHandler interface {
 type PostUseCase interface {
 	CreatePost(newpost Post, userid int) int
 	UpdatePost(newpost Post, postid, userid int) int
-	ReadAllPost() ([]PostComent, int)
+	ReadAllPost() ([]PostComent, []CommentUser, int)
 	ReadMyPost(userid int) ([]Post, int)
 }
 
@@ -43,4 +45,5 @@ type PostData interface {
 	UpdatePostData(newpost Post) Post
 	ReadAllPostData() []PostComent
 	ReadMyPostData(userid int) []Post
+	ReadAllCommentData() []CommentUser
 }
