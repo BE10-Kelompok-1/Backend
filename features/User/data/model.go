@@ -2,7 +2,7 @@ package data
 
 import (
 	"backend/domain"
-	//commentdata "backend/features/Comment/data"
+	commentdata "backend/features/Comment/data"
 	postdata "backend/features/Post/data"
 
 	"gorm.io/gorm"
