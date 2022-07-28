@@ -29,7 +29,7 @@ func InitFactory(e *echo.Echo, db *gorm.DB, awsConn *session.Session) {
 
 	postData := pd.New(db)
 	postCase := pc.New(postData, validator)
-	postHandler := pdeli.New(postCase, awsConn)
+	postHandler := pdeli.New(postData, postCase, awsConn)
 	pdeli.RoutePost(e, postHandler)
 
 	commentData := cd.New(db)

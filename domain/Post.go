@@ -43,14 +43,8 @@ type PostUseCase interface {
 type PostData interface {
 	CreatePostData(newpost Post) Post
 	UpdatePostData(newpost Post) Post
-<<<<<<< HEAD
 	ReadAllPostData() []PostComent
 	ReadMyPostData(userid int) []Post
-<<<<<<< HEAD
 	ReadAllCommentData() []CommentUser
-=======
-=======
 	CheckUser(newpost Post) string
->>>>>>> b1af7c8 (unfinished posttesting)
->>>>>>> c8ac55c (unfinished posttesting)
 }
