@@ -132,7 +132,8 @@ func (ud *userData) ProfileUserData(userid int) domain.User {
 
 func (ud *userData) SearchUserPostingData(username string) []domain.UserPosting {
 	var tmp []UserPosting
-	err := ud.db.Model(&User{}).Select("users.ID, posts.ID, posts.photo, posts.caption, posts.created_at").Joins("left join posts on posts.userid = users.id").Where("users.username = ?", username).Find(&tmp).Error
+	err := ud.db.Model(&User{}).Order("posts.id DESC").Select("users.ID, posts.ID, posts.photo, posts.caption, posts.created_at").
+		Joins("left join posts on posts.userid = users.id").Where("users.username = ?", username).Find(&tmp).Limit(50).Error
 	if err != nil {
 		log.Println("There is problem with data", err.Error())
 		return nil
@@ -150,8 +151,8 @@ func (ud *userData) SearchUserPostingCommentData(username string) []domain.Comme
 	}
 
 	var tmp []CommentUser
-	err := ud.db.Model(&data.Post{}).Select("comments.id, users.firstname, users.lastname, users.photoprofile, comments.postid, comments.comment, comments.created_at").
-		Joins("join comments on comments.postid = posts.id").Joins("join users on comments.userid = users.id").Where("posts.userid = ?", profile.ID).Find(&tmp).Error
+	err := ud.db.Model(&data.Post{}).Order("comments.id DESC").Select("comments.id, users.firstname, users.lastname, users.photoprofile, comments.postid, comments.comment, comments.created_at").
+		Joins("join comments on comments.postid = posts.id").Joins("join users on comments.userid = users.id").Where("posts.userid = ?", profile.ID).Find(&tmp).Limit(50).Error
 	if err != nil {
 		log.Println("There is problem with data", err.Error())
 		return nil
