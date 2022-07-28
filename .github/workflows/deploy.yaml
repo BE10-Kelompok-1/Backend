@@ -1,0 +1,27 @@
+name: Deploy to AWS EC2
+
+on:
+  pull_request_target:
+    types: ["closed"]   
+    branches: ["main"]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing deploy to server using remote ssh key
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME}}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT}}
+          script: |
+            cd /home/ubuntu/production
+            git pull origin main
+            docker stop appContainer
+            docker rm appContainer
+            docker build -t g1app:latest
+            docker run -d -p 80:80 -e SECRET={{secrets.SECRET}} -e NAME=${{ secrets.NAME}} -e USERNAME=${{ secrets.USERNAME }} -e PASSWORD=${{ secrets.PASSWORD}} -e ADDRESS=${{ secrets.ADDRESS }} -e DB_PORT=${{ secrets.DB_PORT }} --name appContainer g1app:latest
+  
