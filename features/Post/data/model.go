@@ -11,9 +11,9 @@ import (
 type Post struct {
 	gorm.Model
 	Userid   int
-	Photo    string             `json:"photo" form:"photo"`
-	Caption  string             `json:"caption" form:"caption" validate:"required"`
-	Comments []data.CommentUser `gorm:"foreignKey:Postid"`
+	Photo    string         `json:"photo" form:"photo"`
+	Caption  string         `json:"caption" form:"caption" validate:"required"`
+	Comments []data.Comment `gorm:"foreignKey:Postid"`
 }
 
 type PostComent struct {

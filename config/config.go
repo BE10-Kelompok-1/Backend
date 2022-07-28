@@ -35,7 +35,7 @@ func GetConfig() *AppConfig {
 func initConfig() *AppConfig {
 	var defaultConfig AppConfig
 	err := godotenv.Load("local.env")
-	//!! USE "source local.env"!!!!!!!!!!!!!!!
+
 	if err != nil {
 		log.Fatal("Cannot read configuration")
 		return nil
@@ -49,10 +49,10 @@ func initConfig() *AppConfig {
 
 	SERVERPORT = int16(cnv)
 	defaultConfig.Name = os.Getenv("Name")
-	defaultConfig.Username = os.Getenv("Username")
-	defaultConfig.Password = os.Getenv("Password")
+	defaultConfig.Username = os.Getenv("DB_USERNAME")
+	defaultConfig.Password = os.Getenv("DB_PASSWORD")
 	defaultConfig.Address = os.Getenv("Address")
-	cnv, err = strconv.Atoi(os.Getenv("Port"))
+	cnv, err = strconv.Atoi(os.Getenv("DB_Port"))
 
 	// SERVERPORT = int16(cnv)
 	// defaultConfig.Name = os.Getenv("NAME")
