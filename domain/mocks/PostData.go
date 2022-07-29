@@ -27,6 +27,52 @@ func (_m *PostData) CreatePostData(newpost domain.Post) domain.Post {
 	return r0
 }
 
+// DeletePostData provides a mock function with given fields: postid, userid
+func (_m *PostData) DeletePostData(postid int, userid int) bool {
+	ret := _m.Called(postid, userid)
+
+	var r0 bool
+	if rf, ok := ret.Get(0).(func(int, int) bool); ok {
+		r0 = rf(postid, userid)
+	} else {
+		r0 = ret.Get(0).(bool)
+	}
+
+	return r0
+}
+
+// ReadAllCommentData provides a mock function with given fields:
+func (_m *PostData) ReadAllCommentData() []domain.CommentUser {
+	ret := _m.Called()
+
+	var r0 []domain.CommentUser
+	if rf, ok := ret.Get(0).(func() []domain.CommentUser); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]domain.CommentUser)
+		}
+	}
+
+	return r0
+}
+
+// ReadAllPostData provides a mock function with given fields:
+func (_m *PostData) ReadAllPostData() []domain.PostComent {
+	ret := _m.Called()
+
+	var r0 []domain.PostComent
+	if rf, ok := ret.Get(0).(func() []domain.PostComent); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]domain.PostComent)
+		}
+	}
+
+	return r0
+}
+
 // UpdatePostData provides a mock function with given fields: newpost
 func (_m *PostData) UpdatePostData(newpost domain.Post) domain.Post {
 	ret := _m.Called(newpost)
