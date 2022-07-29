@@ -55,6 +55,38 @@ func (_m *UserData) GetPasswordData(name string) string {
 	return r0
 }
 
+// GetUserCommentData provides a mock function with given fields: userid
+func (_m *UserData) GetUserCommentData(userid int) []domain.CommentUser {
+	ret := _m.Called(userid)
+
+	var r0 []domain.CommentUser
+	if rf, ok := ret.Get(0).(func(int) []domain.CommentUser); ok {
+		r0 = rf(userid)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]domain.CommentUser)
+		}
+	}
+
+	return r0
+}
+
+// GetUserPostingData provides a mock function with given fields: userid
+func (_m *UserData) GetUserPostingData(userid int) []domain.UserPosting {
+	ret := _m.Called(userid)
+
+	var r0 []domain.UserPosting
+	if rf, ok := ret.Get(0).(func(int) []domain.UserPosting); ok {
+		r0 = rf(userid)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]domain.UserPosting)
+		}
+	}
+
+	return r0
+}
+
 // LoginData provides a mock function with given fields: userdata
 func (_m *UserData) LoginData(userdata domain.User) domain.User {
 	ret := _m.Called(userdata)
