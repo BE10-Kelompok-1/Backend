@@ -41,7 +41,7 @@ type UserUseCase interface {
 	SearchUser(username string) (User, []UserPosting, []CommentUser, int)
 	DeleteUser(userid int) int
 	LoginUser(userdata User) (User, error)
-	ProfileUser(userid int) (User, error)
+	ProfileUser(userid int) (User, []UserPosting, []CommentUser, int)
 }
 
 type UserData interface {
@@ -55,4 +55,6 @@ type UserData interface {
 	SearchUserPostingData(username string) []UserPosting
 	SearchUserPostingCommentData(username string) []CommentUser
 	ProfileUserData(userid int) User
+	GetUserPostingData(userid int) []UserPosting
+	GetUserCommentData(userid int) []CommentUser
 }
