@@ -3,19 +3,26 @@ package delivery
 import (
 	"backend/domain"
 	"backend/features/common"
+	awss3 "backend/infrastructure/database/aws"
+	"fmt"
 	"log"
 	"net/http"
 
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/labstack/echo/v4"
 )
 
 type userHandler struct {
 	useUsecase domain.UserUseCase
+	userdata   domain.UserData
+	conn       *session.Session
 }
 
-func New(uuc domain.UserUseCase) domain.UserHandler {
+func New(uuc domain.UserUseCase, ud domain.UserData, aws *session.Session) domain.UserHandler {
 	return &userHandler{
 		useUsecase: uuc,
+		userdata:   ud,
+		conn:       aws,
 	}
 }
 
@@ -33,6 +40,17 @@ func (uh *userHandler) Register() echo.HandlerFunc {
 				"message": "There is an error in internal server",
 			})
 		}
+
+		file, err := c.FormFile("photoprofile")
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		filename := fmt.Sprintf("%s_profilepic.jpg", newuser.Username)
+		log.Println(filename)
+		link := awss3.DoUpload(uh.conn, *file, filename)
+		newuser.Photoprofile = link
 
 		status := uh.useUsecase.RegisterUser(newuser.ToModel(), cost)
 
@@ -81,6 +99,16 @@ func (uh *userHandler) Update() echo.HandlerFunc {
 			})
 		}
 
+		file, err := c.FormFile("photoprofile")
+
+		if err == nil {
+			log.Println(err)
+			filename := fmt.Sprintf("%s_profilepic.jpg", newuser.Username)
+			log.Println(filename)
+			link := awss3.DoUpload(uh.conn, *file, filename)
+			newuser.Photoprofile = link
+		}
+
 		status := uh.useUsecase.UpdateUser(newuser.ToModel(), id, cost)
 
 		if status == 400 {
@@ -114,7 +142,11 @@ func (uh *userHandler) Update() echo.HandlerFunc {
 func (uh *userHandler) Search() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		cnv := c.Param("username")
-		profile, status := uh.useUsecase.SearchUser(cnv)
+		profile, posting, comment, status := uh.useUsecase.SearchUser(cnv)
+
+		var comarrmap = []domain.CommentUser{}
+		var arrmap []map[string]interface{}
+		var arrmap2 []map[string]interface{}
 
 		if status == 404 {
 			return c.JSON(http.StatusNotFound, map[string]interface{}{
@@ -129,16 +161,33 @@ func (uh *userHandler) Search() echo.HandlerFunc {
 				"message": "There is an error in internal server",
 			})
 		}
+		var res2 = map[string]interface{}{}
+		res2["photoprofile"] = profile.Photoprofile
+		res2["firstname"] = profile.Firstname
+		res2["lastname"] = profile.Lastname
+		res2["username"] = profile.Username
+		for i := 0; i < len(posting); i++ {
+			var res = map[string]interface{}{}
+			for j := 0; j < len(comment); j++ {
+				if posting[i].ID == comment[j].Postid {
+					comarrmap = append(comarrmap, comment[j])
+				}
+			}
+			res["id"] = posting[i].ID
+			res["photo"] = posting[i].Photo
+			res["caption"] = posting[i].Caption
+			res["created_at"] = posting[i].CreatedAt
+			res["comments"] = comarrmap
 
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"photoprofile": profile.Photoprofile,
-			"firstname":    profile.Firstname,
-			"lastname":     profile.Lastname,
-			"usename":      profile.Username,
-			"posts":        profile.Posts,
-			"code":         status,
-			"message":      "get data success",
-		})
+			comarrmap = comarrmap[len(comarrmap):]
+			arrmap = append(arrmap, res)
+			log.Println("arrmap postkomen", arrmap)
+
+		}
+		res2["posts"] = arrmap
+		arrmap2 = append(arrmap2, res2)
+
+		return c.JSON(http.StatusOK, arrmap2)
 	}
 }
 
@@ -204,35 +253,56 @@ func (uh *userHandler) Login() echo.HandlerFunc {
 
 func (uh *userHandler) Profile() echo.HandlerFunc {
 	return func(c echo.Context) error {
+		id := common.ExtractData(c)
+		profile, posting, comment, status := uh.useUsecase.ProfileUser(id)
 
-		idToken := common.ExtractData(c)
-		if idToken == 0 {
-			return c.JSON(http.StatusBadRequest, map[string]interface{}{
-				"code":    400,
+		var comarrmap = []domain.CommentUser{}
+		var arrmap []map[string]interface{}
+		var arrmap2 []map[string]interface{}
+
+		if status == 404 {
+			return c.JSON(http.StatusNotFound, map[string]interface{}{
+				"code":    status,
 				"message": "Data not found",
 			})
 		}
 
-		result, err := uh.useUsecase.ProfileUser(idToken)
-		if err != nil {
+		if status == 500 {
 			return c.JSON(http.StatusInternalServerError, map[string]interface{}{
-				"code":    500,
+				"code":    status,
 				"message": "There is an error in internal server",
 			})
 		}
+		var res2 = map[string]interface{}{}
+		res2["photoprofile"] = profile.Photoprofile
+		res2["firstname"] = profile.Firstname
+		res2["lastname"] = profile.Lastname
+		res2["username"] = profile.Username
+		res2["email"] = profile.Email
+		res2["birthdate"] = profile.Birthdate
+		res2["password"] = profile.Password
+		for i := 0; i < len(posting); i++ {
+			var res = map[string]interface{}{}
+			for j := 0; j < len(comment); j++ {
+				if posting[i].ID == comment[j].Postid {
+					comarrmap = append(comarrmap, comment[j])
+				}
+			}
+			res["id"] = posting[i].ID
+			res["photo"] = posting[i].Photo
+			res["caption"] = posting[i].Caption
+			res["created_at"] = posting[i].CreatedAt
+			res["comments"] = comarrmap
 
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"code":    200,
-			"message": "success",
-			"data": map[string]interface{}{
-				"id":         result.ID,
-				"fotoprofil": result.Photoprofile,
-				"firstname":  result.Firstname,
-				"lastname":   result.Lastname,
-				"username":   result.Username,
-				"posts":      domain.Post{},
-			},
-		})
+			comarrmap = comarrmap[len(comarrmap):]
+			arrmap = append(arrmap, res)
+			log.Println("arrmap postkomen", arrmap)
+
+		}
+		res2["posts"] = arrmap
+		arrmap2 = append(arrmap2, res2)
+
+		return c.JSON(http.StatusOK, arrmap2)
 	}
 
 }

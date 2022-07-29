@@ -3,20 +3,26 @@ package delivery
 import (
 	"backend/domain"
 	"backend/features/common"
+	awss3 "backend/infrastructure/database/aws"
 	"log"
 	"net/http"
 	"strconv"
 
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/labstack/echo/v4"
 )
 
 type postHandler struct {
+	postData    domain.PostData
 	postUseCase domain.PostUseCase
+	conn        *session.Session
 }
 
-func New(puc domain.PostUseCase) domain.PostHandler {
+func New(pd domain.PostData, puc domain.PostUseCase, aws *session.Session) domain.PostHandler {
 	return &postHandler{
 		postUseCase: puc,
+		postData:    pd,
+		conn:        aws,
 	}
 }
 
@@ -35,6 +41,14 @@ func (ph *postHandler) Create() echo.HandlerFunc {
 			})
 		}
 
+		file, err := c.FormFile("photo")
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		link := awss3.DoUpload(ph.conn, *file, file.Filename)
+		newpost.Photo = link
 		status := ph.postUseCase.CreatePost(newpost.ToModel(), id)
 
 		if status == 400 {
@@ -70,7 +84,7 @@ func (ph *postHandler) Update() echo.HandlerFunc {
 	return func(c echo.Context) error {
 		var newpost PostFormat
 		postid := c.Param("postid")
-		cnv, err := strconv.Atoi(postid)
+		id, err := strconv.Atoi(postid)
 
 		if err != nil {
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -90,7 +104,15 @@ func (ph *postHandler) Update() echo.HandlerFunc {
 			})
 		}
 
-		status := ph.postUseCase.UpdatePost(newpost.ToModel(), cnv, userid)
+		file, err := c.FormFile("photo")
+
+		if err != nil {
+			log.Println(err)
+		}
+
+		link := awss3.DoUpload(ph.conn, *file, file.Filename)
+		newpost.Photo = link
+		status := ph.postUseCase.UpdatePost(newpost.ToModel(), id, userid)
 
 		if status == 400 {
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
@@ -119,7 +141,7 @@ func (ph *postHandler) ReadAll() echo.HandlerFunc {
 
 		var comarrmap = []domain.CommentUser{}
 		var arrmap []map[string]interface{}
-
+		var statuscode = map[string]interface{}{}
 		if status == 404 {
 			return c.JSON(http.StatusNotFound, map[string]interface{}{
 				"code":    status,
@@ -149,21 +171,32 @@ func (ph *postHandler) ReadAll() echo.HandlerFunc {
 			res["caption"] = data[i].Caption
 			res["created_at"] = data[i].CreatedAt
 			res["comments"] = comarrmap
-			res["code"] = status
-			res["message"] = "get data success"
 
-			comarrmap = comarrmap[2:]
+			comarrmap = comarrmap[len(comarrmap):]
 			arrmap = append(arrmap, res)
 		}
+
+		statuscode["code"] = status
+		statuscode["messages"] = "get data success"
+		arrmap = append(arrmap, statuscode)
 
 		return c.JSON(http.StatusOK, arrmap)
 	}
 }
 
-func (ph *postHandler) ReadMy() echo.HandlerFunc {
+func (ph *postHandler) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
+
+		param := c.Param("postid")
 		id := common.ExtractData(c)
-		data, status := ph.postUseCase.ReadMyPost(id)
+		cnv, err := strconv.Atoi(param)
+
+		if err != nil {
+			log.Println("cant convert to int", err)
+			return c.JSON(http.StatusInternalServerError, "cant convert to int")
+		}
+
+		status := ph.postUseCase.DeletePost(cnv, id)
 
 		if status == 404 {
 			return c.JSON(http.StatusNotFound, map[string]interface{}{
@@ -180,8 +213,8 @@ func (ph *postHandler) ReadMy() echo.HandlerFunc {
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
-			"data": data,
+			"code":    status,
+			"message": "Success delete post",
 		})
-
 	}
 }

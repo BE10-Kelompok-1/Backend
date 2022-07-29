@@ -50,3 +50,14 @@ func (cuc *commentUsecase) ReadComment() ([]domain.CommentUser, int) {
 
 	return reads, 200
 }
+
+func (cuc *commentUsecase) DeleteComment(commentid, userid int) int {
+	delete := cuc.commentData.DeleteCommentData(commentid, userid)
+
+	if !delete {
+		log.Println("Data not found")
+		return 404
+	}
+
+	return 200
+}

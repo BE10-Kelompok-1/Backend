@@ -27,6 +27,52 @@ func (_m *PostUseCase) CreatePost(newpost domain.Post, userid int) int {
 	return r0
 }
 
+// DeletePost provides a mock function with given fields: postid, userid
+func (_m *PostUseCase) DeletePost(postid int, userid int) int {
+	ret := _m.Called(postid, userid)
+
+	var r0 int
+	if rf, ok := ret.Get(0).(func(int, int) int); ok {
+		r0 = rf(postid, userid)
+	} else {
+		r0 = ret.Get(0).(int)
+	}
+
+	return r0
+}
+
+// ReadAllPost provides a mock function with given fields:
+func (_m *PostUseCase) ReadAllPost() ([]domain.PostComent, []domain.CommentUser, int) {
+	ret := _m.Called()
+
+	var r0 []domain.PostComent
+	if rf, ok := ret.Get(0).(func() []domain.PostComent); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]domain.PostComent)
+		}
+	}
+
+	var r1 []domain.CommentUser
+	if rf, ok := ret.Get(1).(func() []domain.CommentUser); ok {
+		r1 = rf()
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).([]domain.CommentUser)
+		}
+	}
+
+	var r2 int
+	if rf, ok := ret.Get(2).(func() int); ok {
+		r2 = rf()
+	} else {
+		r2 = ret.Get(2).(int)
+	}
+
+	return r0, r1, r2
+}
+
 // UpdatePost provides a mock function with given fields: newpost, postid, userid
 func (_m *PostUseCase) UpdatePost(newpost domain.Post, postid int, userid int) int {
 	ret := _m.Called(newpost, postid, userid)

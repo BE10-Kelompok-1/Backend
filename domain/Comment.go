@@ -26,14 +26,17 @@ type CommentUser struct {
 type CommentHandler interface {
 	Create() echo.HandlerFunc
 	Read() echo.HandlerFunc
+	Delete() echo.HandlerFunc
 }
 
 type CommentUseCase interface {
 	CreateComment(newcomment Comment, userid int) int
 	ReadComment() ([]CommentUser, int)
+	DeleteComment(commentid, bookid int) int
 }
 
 type CommentData interface {
 	CreateCommentData(newcomment Comment) Comment
 	ReadCommentData() []CommentUser
+	DeleteCommentData(commentid, bookid int) bool
 }

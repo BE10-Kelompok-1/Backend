@@ -55,6 +55,38 @@ func (_m *UserData) GetPasswordData(name string) string {
 	return r0
 }
 
+// GetUserCommentData provides a mock function with given fields: userid
+func (_m *UserData) GetUserCommentData(userid int) []domain.CommentUser {
+	ret := _m.Called(userid)
+
+	var r0 []domain.CommentUser
+	if rf, ok := ret.Get(0).(func(int) []domain.CommentUser); ok {
+		r0 = rf(userid)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]domain.CommentUser)
+		}
+	}
+
+	return r0
+}
+
+// GetUserPostingData provides a mock function with given fields: userid
+func (_m *UserData) GetUserPostingData(userid int) []domain.UserPosting {
+	ret := _m.Called(userid)
+
+	var r0 []domain.UserPosting
+	if rf, ok := ret.Get(0).(func(int) []domain.UserPosting); ok {
+		r0 = rf(userid)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]domain.UserPosting)
+		}
+	}
+
+	return r0
+}
+
 // LoginData provides a mock function with given fields: userdata
 func (_m *UserData) LoginData(userdata domain.User) domain.User {
 	ret := _m.Called(userdata)
@@ -62,6 +94,20 @@ func (_m *UserData) LoginData(userdata domain.User) domain.User {
 	var r0 domain.User
 	if rf, ok := ret.Get(0).(func(domain.User) domain.User); ok {
 		r0 = rf(userdata)
+	} else {
+		r0 = ret.Get(0).(domain.User)
+	}
+
+	return r0
+}
+
+// ProfileUserData provides a mock function with given fields: userid
+func (_m *UserData) ProfileUserData(userid int) domain.User {
+	ret := _m.Called(userid)
+
+	var r0 domain.User
+	if rf, ok := ret.Get(0).(func(int) domain.User); ok {
+		r0 = rf(userid)
 	} else {
 		r0 = ret.Get(0).(domain.User)
 	}
@@ -84,40 +130,46 @@ func (_m *UserData) RegisterData(newuser domain.User) domain.User {
 }
 
 // SearchUserData provides a mock function with given fields: username
-func (_m *UserData) SearchUserData(username string) (domain.User) {
+func (_m *UserData) SearchUserData(username string) domain.User {
 	ret := _m.Called(username)
 
 	var r0 domain.User
-	if rf, ok := ret.Get(1).(func(string) domain.User); ok {
+	if rf, ok := ret.Get(0).(func(string) domain.User); ok {
 		r0 = rf(username)
 	} else {
-		r0 = ret.Get(1).(domain.User)
+		r0 = ret.Get(0).(domain.User)
 	}
 
 	return r0
 }
 
+// SearchUserPostingCommentData provides a mock function with given fields: username
+func (_m *UserData) SearchUserPostingCommentData(username string) []domain.CommentUser {
+	ret := _m.Called(username)
+
+	var r0 []domain.CommentUser
+	if rf, ok := ret.Get(0).(func(string) []domain.CommentUser); ok {
+		r0 = rf(username)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]domain.CommentUser)
+		}
+	}
+
+	return r0
+}
+
+// SearchUserPostingData provides a mock function with given fields: username
 func (_m *UserData) SearchUserPostingData(username string) []domain.UserPosting {
 	ret := _m.Called(username)
 
 	var r0 []domain.UserPosting
-	if rf, ok := ret.Get(1).(func(string) []domain.UserPosting); ok {
+	if rf, ok := ret.Get(0).(func(string) []domain.UserPosting); ok {
 		r0 = rf(username)
 	} else {
-		r0 = ret.Get(1).([]domain.UserPosting)
-	}
-
-	return r0
-}
-
-func (_m *UserData) SearchUserPostingCommentData(username string) []domain.UserPostingComment {
-	ret := _m.Called(username)
-
-	var r0 []domain.UserPostingComment
-	if rf, ok := ret.Get(1).(func(string) []domain.UserPostingComment); ok {
-		r0 = rf(username)
-	} else {
-		r0 = ret.Get(1).([]domain.UserPostingComment)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]domain.UserPosting)
+		}
 	}
 
 	return r0
@@ -132,19 +184,6 @@ func (_m *UserData) UpdateUserData(newuser domain.User) domain.User {
 		r0 = rf(newuser)
 	} else {
 		r0 = ret.Get(0).(domain.User)
-	}
-
-	return r0
-}
-
-func (_m *UserData) ProfileUserData(userid int) (domain.User) {
-	ret := _m.Called(userid)
-
-	var r0 domain.User
-	if rf, ok := ret.Get(1).(func(int) domain.User); ok {
-		r0 = rf(userid)
-	} else {
-		r0 = ret.Get(1).(domain.User)
 	}
 
 	return r0

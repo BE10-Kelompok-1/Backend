@@ -82,10 +82,10 @@ func TestUpdateUser(t *testing.T) {
 	repo := new(mocks.UserData)
 	cost := 10
 
-	returnData := domain.User{ID: 1, Firstname: "Lukman", Lastname: "Hafidz", Username: "NotAPanda",
+	mockData := domain.User{Firstname: "Lukman", Lastname: "Hafidz", Username: "NotAPanda",
 		Email: "lukman@gmail.com", Password: "polar", Birthdate: "1999-12-05", Photoprofile: "lukman.jpg"}
 
-	mockData := domain.User{Firstname: "Lukman", Lastname: "Hafidz", Username: "NotAPanda",
+	returnData := domain.User{ID: 1, Firstname: "Lukman", Lastname: "Hafidz", Username: "NotAPanda",
 		Email: "lukman@gmail.com", Password: "polar", Birthdate: "1999-12-05", Photoprofile: "lukman.jpg"}
 
 	invalidData := mockData
@@ -136,51 +136,57 @@ func TestUpdateUser(t *testing.T) {
 	})
 }
 
-//func TestSearchUser(t *testing.T) {
-// repo := new(mocks.UserData)
-// returnData := domain.User_Posting{UserID: 1, Photoprofile: "vanili.jpg", Firstname: "Vanilia", Lastname: "Nugroho", Username: "vaniliacahya",
-// 	Postid: 1, Photo: "vanilia.jpg", Caption: "apalah"}
+func TestSearchUser(t *testing.T) {
+	repo := new(mocks.UserData)
 
-// returnData2 := domain.User_Posting{UserID: 0, Photoprofile: "", Firstname: "", Lastname: "", Username: "",
-// 	Postid: 0, Photo: "", Caption: ""}
+	returnDatauser := domain.User{ID: 1, Firstname: "Lukman", Lastname: "Hafidz", Username: "NotAPanda",
+		Email: "lukman@gmail.com", Password: "polar", Birthdate: "1999-12-05", Photoprofile: "lukman.jpg"}
 
-// t.Run("Succes get user", func(t *testing.T) {
-// 	repo.On("SearchUserData", mock.Anything).Return(returnData, nil).Once()
-// 	usecase := New(repo, validator.New())
-// 	search, res := usecase.SearchUser("vaniliacahya")
+	returnDataPostComment := []domain.UserPosting{{ID: 1, Photo: "post.jpg", Caption: "keren bgt"}}
 
-// 	assert.Equal(t, 200, res)
-// 	assert.Greater(t, search.UserID, 0)
-// 	assert.Equal(t, "vanili.jpg", search.Photoprofile)
-// 	assert.Equal(t, "Vanilia", search.Firstname)
-// 	assert.Equal(t, "Nugroho", search.Lastname)
-// 	assert.Equal(t, 1, search.Postid)
-// 	assert.Equal(t, "vanilia.jpg", search.Photo)
-// 	assert.Equal(t, "apalah", search.Caption)
-// 	repo.AssertExpectations(t)
-// })
+	returnDataCommentUser := []domain.CommentUser{{Id: 1, Firstname: "Lukman", Lastname: "Hafidz", Photoprofile: "lukman.jpg", Postid: 1,
+		Comment: "keren bang mamah mu pasti bangga"}}
 
-// t.Run("No data found", func(t *testing.T) {
-// 	repo.On("SearchUserData", mock.Anything).Return(returnData2)
-// 	usecase := New(repo, validator.New())
-// 	search, res := usecase.SearchUser("vanilii")
-// 	assert.Equal(t, 404, res)
-// 	assert.Greater(t, search.UserID, 0)
-// 	assert.Equal(t, "", search.Photoprofile)
-// 	assert.Equal(t, "", search.Firstname)
-// 	assert.Equal(t, "", search.Lastname)
-// 	assert.Equal(t, 0, search.Postid)
-// 	assert.Equal(t, "", search.Photo)
-// 	assert.Equal(t, "", search.Caption)
-// 	repo.AssertExpectations(t)
-//})
-//}
+	t.Run("Success get user", func(t *testing.T) {
+		repo.On("SearchUserData", mock.Anything).Return(returnDatauser).Once()
+		repo.On("SearchUserPostingData", mock.Anything).Return(returnDataPostComment)
+		repo.On("SearchUserPostingCommentData", mock.Anything).Return(returnDataCommentUser)
+		useCase := New(repo, validator.New())
+		profile, posting, comment, status := useCase.SearchUser("NotAPanda")
 
+		assert.Equal(t, returnDatauser, profile)
+		assert.Equal(t, posting, returnDataPostComment)
+		assert.Equal(t, comment, returnDataCommentUser)
+		assert.Equal(t, 200, status)
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("Wrong Input", func(t *testing.T) {
+		useCase := New(repo, validator.New())
+		_, _, _, status := useCase.SearchUser("")
+
+		assert.Equal(t, 400, status)
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("Data not found", func(t *testing.T) {
+		returnDatauser.ID = 0
+		repo.On("SearchUserData", mock.Anything).Return(returnDatauser).Once()
+		repo.On("SearchUserPostingData", mock.Anything).Return(returnDataPostComment)
+		repo.On("SearchUserPostingCommentData", mock.Anything).Return(returnDataCommentUser)
+		useCase := New(repo, validator.New())
+		profile, _, _, status := useCase.SearchUser("NotAPanda")
+
+		assert.Equal(t, 0, profile.ID)
+		assert.Equal(t, 404, status)
+		repo.AssertExpectations(t)
+	})
+}
 func TestDeleteUser(t *testing.T) {
 	repo := new(mocks.UserData)
 
 	t.Run("Succes delete", func(t *testing.T) {
-		repo.On("DeleteUserData", mock.Anything).Return(true, nil).Once()
+		repo.On("DeleteUserData", mock.Anything).Return(true).Once()
 		usecase := New(repo, validator.New())
 		delete := usecase.DeleteUser(1)
 
@@ -198,7 +204,65 @@ func TestDeleteUser(t *testing.T) {
 	})
 }
 
-func TestSearchUserPostingData(t *testing.T)        {}
-func TestSearchUserPostingCommentData(t *testing.T) {}
+func TestProfileUser(t *testing.T) {
+	repo := new(mocks.UserData)
 
-func TestProfileUserData(t *testing.T) {}
+	returnDatauser := domain.User{ID: 1, Firstname: "Lukman", Lastname: "Hafidz", Username: "NotAPanda",
+		Email: "lukman@gmail.com", Password: "polar", Birthdate: "1999-12-05", Photoprofile: "lukman.jpg"}
+
+	returnDataPostComment := []domain.UserPosting{{ID: 1, Photo: "post.jpg", Caption: "keren bgt"}}
+
+	returnDataCommentUser := []domain.CommentUser{{Id: 1, Firstname: "Lukman", Lastname: "Hafidz", Photoprofile: "lukman.jpg", Postid: 1,
+		Comment: "keren bang mamah mu pasti bangga"}}
+
+	t.Run("Success get user", func(t *testing.T) {
+		repo.On("ProfileUserData", mock.Anything).Return(returnDatauser).Once()
+		repo.On("GetUserPostingData", mock.Anything).Return(returnDataPostComment)
+		repo.On("GetUserCommentData", mock.Anything).Return(returnDataCommentUser)
+		useCase := New(repo, validator.New())
+		profile, posting, comment, status := useCase.ProfileUser(1)
+
+		assert.Equal(t, returnDatauser, profile)
+		assert.Equal(t, posting, returnDataPostComment)
+		assert.Equal(t, comment, returnDataCommentUser)
+		assert.Equal(t, 200, status)
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("Data not found", func(t *testing.T) {
+		returnDatauser.ID = 0
+		repo.On("ProfileUserData", mock.Anything).Return(returnDatauser).Once()
+		repo.On("GetUserPostingData", mock.Anything).Return(returnDataPostComment)
+		repo.On("GetUserCommentData", mock.Anything).Return(returnDataCommentUser)
+		useCase := New(repo, validator.New())
+		profile, _, _, status := useCase.ProfileUser(1)
+
+		assert.Equal(t, 0, profile.ID)
+		assert.Equal(t, 404, status)
+		repo.AssertExpectations(t)
+	})
+	// t.Run("no data", func(t *testing.T){
+	// 	repo.On("LoginData", mock.Anything).Return(domain.User{ID: 0})
+	// 	useCase := New(repo, validator.New())
+	// res, err := useCase.LoginUser()
+
+	// })
+}
+
+func TestLoginUser(t *testing.T) {
+	repo := new(mocks.UserData)
+	mockData := domain.User{Username: "NotAPanda", Password: "polar"}
+	returnData := domain.User{ID: 1}
+	token := "wkwwqqw1211221212"
+	t.Run("Succes Login", func(t *testing.T) {
+		repo.On("GetPasswordData", mock.Anything).Return("$2a$10$SrMvwwY/QnQ4nZunBvGOuOm2U1w8wcAENOoAMI7l8xH7C1Vmt5mru")
+		repo.On("LoginData", mock.Anything).Return(returnData, token).Once()
+		userUseCase := New(repo, validator.New())
+		res, err := userUseCase.LoginUser(mockData)
+
+		assert.Nil(t, err)
+		assert.Greater(t, res.ID, 0)
+		repo.AssertExpectations(t)
+	})
+
+}

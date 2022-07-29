@@ -22,21 +22,21 @@ func New(uuc domain.UserData, v *validator.Validate) domain.UserUseCase {
 	}
 }
 
-func (uuc *userUseCase) SearchUser(username string) (domain.User, int) {
-	profile := uuc.userData.SearchUserData(username)
-	// posting := uuc.userData.SearchUserPostingData(username)
-	// comment := uuc.userData.SearchUserPostingCommentData(username)
-
+func (uuc *userUseCase) SearchUser(username string) (domain.User, []domain.UserPosting, []domain.CommentUser, int) {
 	if username == "" {
 		log.Println("Wrong input")
-		return domain.User{}, 404
+		return domain.User{}, nil, nil, 400
 	}
+
+	profile := uuc.userData.SearchUserData(username)
+	posting := uuc.userData.SearchUserPostingData(username)
+	comment := uuc.userData.SearchUserPostingCommentData(username)
 
 	if profile.ID == 0 {
 		log.Println("Data not found")
-		return domain.User{}, 404
+		return domain.User{}, nil, nil, 404
 	}
-	return profile, 200
+	return profile, posting, comment, 200
 }
 
 func (uuc *userUseCase) DeleteUser(id int) int {
@@ -87,16 +87,10 @@ func (uuc *userUseCase) RegisterUser(newuser domain.User, cost int) int {
 // UpdateUser implements domain.UserUseCase
 func (uuc *userUseCase) UpdateUser(newuser domain.User, userid int, cost int) int {
 	var user = data.FromModel(newuser)
-	validError := uuc.validate.Struct(user)
 
 	if userid == 0 {
 		log.Println("Data not found")
 		return 404
-	}
-
-	if validError != nil {
-		log.Println("Validation errror : ", validError.Error())
-		return 400
 	}
 
 	duplicate := uuc.userData.CheckDuplicate(user.ToModel())
@@ -140,12 +134,16 @@ func (uuc *userUseCase) LoginUser(userdata domain.User) (domain.User, error) {
 	return login, nil
 }
 
-func (uuc *userUseCase) ProfileUser(userid int) (domain.User, error) {
-	get := uuc.userData.ProfileUserData(userid)
+func (uuc *userUseCase) ProfileUser(userid int) (domain.User, []domain.UserPosting, []domain.CommentUser, int) {
 
-	if get.ID == 0 {
-		return domain.User{}, errors.New("no data")
+	profile := uuc.userData.ProfileUserData(userid)
+	posting := uuc.userData.GetUserPostingData(userid)
+	comment := uuc.userData.GetUserCommentData(userid)
+
+	if profile.ID == 0 {
+		log.Println("Data not found")
+		return domain.User{}, nil, nil, 404
 	}
 
-	return get, nil
+	return profile, posting, comment, 200
 }

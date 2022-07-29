@@ -3,6 +3,7 @@ package main
 import (
 	"backend/config"
 	"backend/factory"
+	awss3 "backend/infrastructure/database/aws"
 	"backend/infrastructure/database/mysql"
 	"fmt"
 
@@ -15,7 +16,8 @@ func main() {
 	mysql.MigrateData(db)
 	e := echo.New()
 
-	factory.InitFactory(e, db)
+	awsConn := awss3.InitS3(cfg.Keys3, cfg.Secrets3, cfg.Regions3)
+	factory.InitFactory(e, db, awsConn)
 
 	fmt.Println("Starting programm ...")
 	dsn := fmt.Sprintf(":%d", config.SERVERPORT)
