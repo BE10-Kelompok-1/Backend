@@ -162,7 +162,11 @@ func TestSearchUser(t *testing.T) {
 	})
 
 	t.Run("Wrong Input", func(t *testing.T) {
+		useCase := New(repo, validator.New())
+		_, _, _, status := useCase.SearchUser("")
 
+		assert.Equal(t, 400, status)
+		repo.AssertExpectations(t)
 	})
 
 	t.Run("Data not found", func(t *testing.T) {
