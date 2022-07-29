@@ -44,12 +44,6 @@ func (puc *postUsecase) CreatePost(newpost domain.Post, userid int) int {
 // UpdatePost implements domain.PostUseCase
 func (puc *postUsecase) UpdatePost(newpost domain.Post, postid, userid int) int {
 	var post = data.FromModel(newpost)
-	validError := puc.validate.Struct(post)
-
-	if validError != nil {
-		log.Println("Validation errror : ", validError)
-		return 400
-	}
 	post.ID = uint(postid)
 	post.Userid = userid
 	update := puc.postData.UpdatePostData(post.ToModel())
