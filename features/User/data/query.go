@@ -117,15 +117,13 @@ func (ud *userData) LoginData(userdata domain.User) domain.User {
 }
 
 func (ud *userData) ProfileUserData(userid int) domain.User {
-	var user User
-	err := ud.db.Find(&user, "ID = ?", userid).Error
-
+	var tmp User
+	err := ud.db.Where("Username = ?", userid).First(&tmp).Error
 	if err != nil {
-		log.Println("Cant retrieve user dara", err.Error())
+		log.Println("There is problem with data", err.Error())
 		return domain.User{}
 	}
-
-	return user.ToModel()
+	return tmp.ToModel()
 }
 
 func (ud *userData) SearchUserPostingData(username string) []domain.UserPosting {
