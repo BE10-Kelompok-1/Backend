@@ -165,7 +165,7 @@ func (uh *userHandler) Search() echo.HandlerFunc {
 		res2["photoprofile"] = profile.Photoprofile
 		res2["firstname"] = profile.Firstname
 		res2["lastname"] = profile.Lastname
-
+		res2["username"] = profile.Username
 		for i := 0; i < len(posting); i++ {
 			var res = map[string]interface{}{}
 			for j := 0; j < len(comment); j++ {
@@ -277,7 +277,7 @@ func (uh *userHandler) Profile() echo.HandlerFunc {
 		res2["photoprofile"] = profile.Photoprofile
 		res2["firstname"] = profile.Firstname
 		res2["lastname"] = profile.Lastname
-
+		res2["username"] = profile.Username
 		for i := 0; i < len(posting); i++ {
 			var res = map[string]interface{}{}
 			for j := 0; j < len(comment); j++ {
