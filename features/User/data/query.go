@@ -150,11 +150,7 @@ func (ud *userData) LoginData(userdata domain.User) domain.User {
 
 func (ud *userData) ProfileUserData(userid int) domain.User {
 	var tmp User
-<<<<<<< HEAD
-	err := ud.db.Where("Username = ?", userid).First(&tmp).Error
-=======
 	err := ud.db.Where("id = ?", userid).First(&tmp).Error
->>>>>>> 36cb9eb022fb6cfda86c3b442a9968cad0f6a8cf
 	if err != nil {
 		log.Println("There is problem with data", err.Error())
 		return domain.User{}

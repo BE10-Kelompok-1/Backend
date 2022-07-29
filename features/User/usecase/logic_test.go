@@ -136,6 +136,7 @@ func TestUpdateUser(t *testing.T) {
 	})
 }
 
+<<<<<<< HEAD
 // func TestSearchUser(t *testing.T) {
 // 	repo := new(mocks.UserData)
 // 	returnData := domain.User{ID: 1, Firstname: "Vanili", Lastname: "Nugroho", Username: "vanili", Email: "vanili@vanili", Password: "d78", Birthdate: "1996-04-25", Photoprofile: "jpg"}
@@ -170,6 +171,48 @@ func TestUpdateUser(t *testing.T) {
 // 		repo.AssertExpectations(t)
 // 	})
 // }
+=======
+func TestSearchUser(t *testing.T) {
+	repo := new(mocks.UserData)
+
+	returnDatauser := domain.User{ID: 1, Firstname: "Lukman", Lastname: "Hafidz", Username: "NotAPanda",
+		Email: "lukman@gmail.com", Password: "polar", Birthdate: "1999-12-05", Photoprofile: "lukman.jpg"}
+
+	returnDataPostComment := []domain.UserPosting{{ID: 1, Photo: "post.jpg", Caption: "keren bgt"}}
+
+	returnDataCommentUser := []domain.CommentUser{{Id: 1, Firstname: "Lukman", Lastname: "Hafidz", Photoprofile: "lukman.jpg", Postid: 1,
+		Comment: "keren bang mamah mu pasti bangga"}}
+
+	t.Run("Success get user", func(t *testing.T) {
+		repo.On("SearchUserData", mock.Anything).Return(returnDatauser).Once()
+		repo.On("SearchUserPostingData", mock.Anything).Return(returnDataPostComment)
+		repo.On("SearchUserPostingCommentData", mock.Anything).Return(returnDataCommentUser)
+		useCase := New(repo, validator.New())
+		profile, posting, comment, status := useCase.SearchUser("NotAPanda")
+
+		assert.Equal(t, returnDatauser, profile)
+		assert.Equal(t, posting, returnDataPostComment)
+		assert.Equal(t, comment, returnDataCommentUser)
+		assert.Equal(t, 200, status)
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("wrong input")
+
+	t.Run("Data not found", func(t *testing.T) {
+		returnDatauser.ID = 0
+		repo.On("SearchUserData", mock.Anything).Return(returnDatauser).Once()
+		repo.On("SearchUserPostingData", mock.Anything).Return(returnDataPostComment)
+		repo.On("SearchUserPostingCommentData", mock.Anything).Return(returnDataCommentUser)
+		useCase := New(repo, validator.New())
+		profile, _, _, status := useCase.SearchUser("NotAPanda")
+
+		assert.Equal(t, 0, profile.ID)
+		assert.Equal(t, 404, status)
+		repo.AssertExpectations(t)
+	})
+}
+>>>>>>> 22265ad (fix update)
 
 func TestDeleteUser(t *testing.T) {
 	repo := new(mocks.UserData)
@@ -192,3 +235,45 @@ func TestDeleteUser(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 }
+<<<<<<< HEAD
+=======
+
+func TestProfileUser(t *testing.T) {
+	repo := new(mocks.UserData)
+
+	returnDatauser := domain.User{ID: 1, Firstname: "Lukman", Lastname: "Hafidz", Username: "NotAPanda",
+		Email: "lukman@gmail.com", Password: "polar", Birthdate: "1999-12-05", Photoprofile: "lukman.jpg"}
+
+	returnDataPostComment := []domain.UserPosting{{ID: 1, Photo: "post.jpg", Caption: "keren bgt"}}
+
+	returnDataCommentUser := []domain.CommentUser{{Id: 1, Firstname: "Lukman", Lastname: "Hafidz", Photoprofile: "lukman.jpg", Postid: 1,
+		Comment: "keren bang mamah mu pasti bangga"}}
+
+	t.Run("Success get user", func(t *testing.T) {
+		repo.On("ProfileUserData", mock.Anything).Return(returnDatauser).Once()
+		repo.On("GetUserPostingData", mock.Anything).Return(returnDataPostComment)
+		repo.On("GetUserCommentData", mock.Anything).Return(returnDataCommentUser)
+		useCase := New(repo, validator.New())
+		profile, posting, comment, status := useCase.ProfileUser(1)
+
+		assert.Equal(t, returnDatauser, profile)
+		assert.Equal(t, posting, returnDataPostComment)
+		assert.Equal(t, comment, returnDataCommentUser)
+		assert.Equal(t, 200, status)
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("Data not found", func(t *testing.T) {
+		returnDatauser.ID = 0
+		repo.On("ProfileUserData", mock.Anything).Return(returnDatauser).Once()
+		repo.On("GetUserPostingData", mock.Anything).Return(returnDataPostComment)
+		repo.On("GetUserCommentData", mock.Anything).Return(returnDataCommentUser)
+		useCase := New(repo, validator.New())
+		profile, _, _, status := useCase.ProfileUser(1)
+
+		assert.Equal(t, 0, profile.ID)
+		assert.Equal(t, 404, status)
+		repo.AssertExpectations(t)
+	})
+}
+>>>>>>> 22265ad (fix update)
