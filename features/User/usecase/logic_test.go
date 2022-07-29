@@ -203,3 +203,15 @@ func TestSearchUserPostingData(t *testing.T) {}
 func TestSearchUserPostingCommentData(t *testing.T) {}
 
 func TestProfileUserData(t *testing.T) {}
+
+func TestLoginUser(t *testing.T) {
+	repo := new(mocks.UserData)
+	cost := 10
+
+	mockData := domain.User{Username: "NotAPanda", Password: "polar"}
+
+	returnData := domain.User
+	t.Run("Success insert data", func(t *testing.T)){
+
+	}
+}
