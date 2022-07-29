@@ -141,7 +141,7 @@ func (ph *postHandler) ReadAll() echo.HandlerFunc {
 
 		var comarrmap = []domain.CommentUser{}
 		var arrmap []map[string]interface{}
-
+		var statuscode = map[string]interface{}{}
 		if status == 404 {
 			return c.JSON(http.StatusNotFound, map[string]interface{}{
 				"code":    status,
@@ -176,11 +176,11 @@ func (ph *postHandler) ReadAll() echo.HandlerFunc {
 			arrmap = append(arrmap, res)
 		}
 
-		return c.JSON(http.StatusOK, map[string]interface{}{
-			"posts":   arrmap,
-			"code":    status,
-			"message": "get data success",
-		})
+		statuscode["code"] = status
+		statuscode["messages"] = "get data success"
+		arrmap = append(arrmap, statuscode)
+
+		return c.JSON(http.StatusOK, arrmap)
 	}
 }
 
@@ -214,7 +214,7 @@ func (ph *postHandler) Delete() echo.HandlerFunc {
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"code":    status,
-			"message": "Success delete comment",
+			"message": "Success delete post",
 		})
 	}
 }

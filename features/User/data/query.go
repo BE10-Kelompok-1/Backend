@@ -18,6 +18,38 @@ func New(db *gorm.DB) domain.UserData {
 	}
 }
 
+func (ud *userData) GetUserPostingData(userid int) []domain.UserPosting {
+	var tmp []UserPosting
+	err := ud.db.Model(&User{}).Order("posts.id DESC").Select("users.ID, posts.ID, posts.photo, posts.caption, posts.created_at").
+		Joins("left join posts on posts.userid = users.id").Where("users.iD = ?", userid).Find(&tmp).Limit(50).Error
+
+	if err != nil {
+		log.Println("There is problem with data", err.Error())
+		return nil
+	}
+
+	return ParseUserPostingToArr(tmp)
+}
+
+func (ud *userData) GetUserCommentData(userid int) []domain.CommentUser {
+	var profile = User{}
+	err2 := ud.db.Where("id = ?", userid).First(&profile).Error
+
+	if err2 != nil {
+		log.Println("There is problem with data", err2.Error())
+		return nil
+	}
+
+	var tmp []CommentUser
+	err := ud.db.Model(&data.Post{}).Order("comments.id DESC").Select("comments.id, users.firstname, users.lastname, users.photoprofile, comments.postid, comments.comment, comments.created_at").
+		Joins("join comments on comments.postid = posts.id").Joins("join users on comments.userid = users.id").Where("posts.userid = ?", profile.ID).Find(&tmp).Limit(50).Error
+	if err != nil {
+		log.Println("There is problem with data", err.Error())
+		return nil
+	}
+	return ParseCommentUserToArr(tmp)
+}
+
 // CheckDuplicate implements domain.UserData
 func (ud *userData) CheckDuplicate(newuser domain.User) bool {
 	var user User
@@ -118,7 +150,7 @@ func (ud *userData) LoginData(userdata domain.User) domain.User {
 
 func (ud *userData) ProfileUserData(userid int) domain.User {
 	var tmp User
-	err := ud.db.Where("Username = ?", userid).First(&tmp).Error
+	err := ud.db.Where("id = ?", userid).First(&tmp).Error
 	if err != nil {
 		log.Println("There is problem with data", err.Error())
 		return domain.User{}

@@ -10,7 +10,11 @@ import (
 )
 
 func RouteUser(e *echo.Echo, uh domain.UserHandler) {
-	e.Pre(middleware.CORS())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins: []string{"*"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
+		AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE},
+	}))
 	e.Use(middleware.RemoveTrailingSlash())
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "method=${method}, uri=${uri}, status=${status}\n",
@@ -23,5 +27,6 @@ func RouteUser(e *echo.Echo, uh domain.UserHandler) {
 	user.DELETE("", uh.Delete(), middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET))))
 	user.POST("", uh.Register())
 	user.PUT("", uh.Update(), middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET))))
+	user.GET("", uh.Profile(), middleware.JWTWithConfig(middlewares.UseJWT([]byte(config.SECRET))))
 	e.POST("/login", uh.Login())
 }
