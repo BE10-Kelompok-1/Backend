@@ -228,7 +228,6 @@ func TestLoginUser(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 
-<<<<<<< HEAD
 	}
 	returnDataPostComment := []domain.UserPosting{{ID: 1, Photo: "post.jpg", Caption: "keren bgt"}}
 
@@ -261,12 +260,10 @@ func TestLoginUser(t *testing.T) {
 		assert.Equal(t, 404, status)
 		repo.AssertExpectations(t)
 	})
-=======
 	// t.Run("no data", func(t *testing.T){
 	// 	repo.On("LoginData", mock.Anything).Return(domain.User{ID: 0})
 	// 	useCase := New(repo, validator.New())
 	// res, err := useCase.LoginUser()
 
 	// })
->>>>>>> 5dacc18 (add unit test login)
 }
