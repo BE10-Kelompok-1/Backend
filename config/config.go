@@ -5,6 +5,8 @@ import (
 	"os"
 	"strconv"
 	"sync"
+
+	"github.com/joho/godotenv"
 	// 	"github.com/joho/godotenv"
 )
 
@@ -36,12 +38,12 @@ func GetConfig() *AppConfig {
 
 func initConfig() *AppConfig {
 	var defaultConfig AppConfig
-	// 	err := godotenv.Load("local.env")
+	err := godotenv.Load("local.env")
 
-	// 	if err != nil {
-	// 		log.Fatal("Cannot read configuration")
-	// 		return nil
-	// 	}
+	if err != nil {
+		log.Fatal("Cannot read configuration")
+		return nil
+	}
 	SECRET = os.Getenv("SECRET")
 	cnv, err := strconv.Atoi(os.Getenv("SERVERPORT"))
 	if err != nil {

@@ -140,12 +140,19 @@ func (uuc *userUseCase) LoginUser(userdata domain.User) (domain.User, error) {
 	return login, nil
 }
 
-func (uuc *userUseCase) ProfileUser(userid int) (domain.User, error) {
-	get := uuc.userData.ProfileUserData(userid)
+func (uuc *userUseCase) ProfileUser(userid int) (domain.User, []domain.UserPosting, []domain.CommentUser, int) {
+	profile := uuc.userData.ProfileUserData(userid)
+	posting := uuc.userData.GetUserPostingData(userid)
+	comment := uuc.userData.GetUserCommentData(userid)
 
-	if get.ID == 0 {
-		return domain.User{}, errors.New("no data")
+	if userid == 0 {
+		log.Println("Need login or register first")
+		return domain.User{}, nil, nil, 404
 	}
 
-	return get, nil
+	if profile.ID == 0 {
+		log.Println("Data not found")
+		return domain.User{}, nil, nil, 404
+	}
+	return profile, posting, comment, 200
 }
