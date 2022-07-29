@@ -214,13 +214,21 @@ func TestProfileUserData(t *testing.T) {}
 
 func TestLoginUser(t *testing.T) {
 	repo := new(mocks.UserData)
-	cost := 10
-
 	mockData := domain.User{Username: "NotAPanda", Password: "polar"}
+	returnData := domain.User{ID: 1}
+	token := "wkwwqqw1211221212"
+	t.Run("Succes Login", func(t *testing.T) {
+		repo.On("GetPasswordData", mock.Anything).Return("$2a$10$SrMvwwY/QnQ4nZunBvGOuOm2U1w8wcAENOoAMI7l8xH7C1Vmt5mru")
+		repo.On("LoginData", mock.Anything).Return(returnData, token).Once()
+		userUseCase := New(repo, validator.New())
+		res, err := userUseCase.LoginUser(mockData)
 
-	returnData := domain.User
-	t.Run("Success login", func(t *testing.T)){
+		assert.Nil(t, err)
+		assert.Greater(t, res.ID, 0)
+		repo.AssertExpectations(t)
+	})
 
+<<<<<<< HEAD
 	}
 	returnDataPostComment := []domain.UserPosting{{ID: 1, Photo: "post.jpg", Caption: "keren bgt"}}
 
@@ -253,4 +261,12 @@ func TestLoginUser(t *testing.T) {
 		assert.Equal(t, 404, status)
 		repo.AssertExpectations(t)
 	})
+=======
+	// t.Run("no data", func(t *testing.T){
+	// 	repo.On("LoginData", mock.Anything).Return(domain.User{ID: 0})
+	// 	useCase := New(repo, validator.New())
+	// res, err := useCase.LoginUser()
+
+	// })
+>>>>>>> 5dacc18 (add unit test login)
 }
