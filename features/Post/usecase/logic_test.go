@@ -32,6 +32,16 @@ func TestCreatePost(t *testing.T) {
 		assert.Equal(t, 400, res)
 		assert.Equal(t, emptyMockData.ID, 0)
 	})
+
+	t.Run("Internal server error", func(t *testing.T) {
+		mockData.ID = 0
+		repo.On("CreatePostData", mock.Anything).Return(mockData).Once()
+		useCase := New(repo, validator.New())
+		res := useCase.CreatePost(mockData, 5)
+
+		assert.Equal(t, 500, res)
+		assert.Equal(t, emptyMockData.ID, 0)
+	})
 }
 
 func TestDeletePost(t *testing.T) {
@@ -102,6 +112,24 @@ func TestUpdateUser(t *testing.T) {
 	})
 
 	t.Run("Data Not Found", func(t *testing.T) {
+		repo.On("UpdatePostData", mock.Anything).Return(emptyMockData).Once()
+		useCase := New(repo, validator.New())
+		res := useCase.UpdatePost(mockData, 0, 0)
+
+		assert.Equal(t, 404, res)
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("Data Not Found", func(t *testing.T) {
+		repo.On("UpdatePostData", mock.Anything).Return(emptyMockData).Once()
+		useCase := New(repo, validator.New())
+		res := useCase.UpdatePost(mockData, 0, 0)
+
+		assert.Equal(t, 404, res)
+		repo.AssertExpectations(t)
+	})
+
+	t.Run("Validation error", func(t *testing.T) {
 		repo.On("UpdatePostData", mock.Anything).Return(emptyMockData).Once()
 		useCase := New(repo, validator.New())
 		res := useCase.UpdatePost(mockData, 0, 0)
