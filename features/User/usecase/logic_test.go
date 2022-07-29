@@ -136,51 +136,46 @@ func TestUpdateUser(t *testing.T) {
 	})
 }
 
-//func TestSearchUser(t *testing.T) {
-// repo := new(mocks.UserData)
-// returnData := domain.User_Posting{UserID: 1, Photoprofile: "vanili.jpg", Firstname: "Vanilia", Lastname: "Nugroho", Username: "vaniliacahya",
-// 	Postid: 1, Photo: "vanilia.jpg", Caption: "apalah"}
+// func TestSearchUser(t *testing.T) {
+// 	repo := new(mocks.UserData)
+// 	returnData := domain.User{ID: 1, Firstname: "Vanili", Lastname: "Nugroho", Username: "vanili", Email: "vanili@vanili", Password: "d78", Birthdate: "1996-04-25", Photoprofile: "jpg"}
+// 	// returnData1 := []domain.UserPosting{{ID: 1, Photo: "jpg", Caption: "a"}}
+// 	// returnData2 := []domain.CommentUser{{Id: 1, Firstname: "Vanili", Lastname: "Nugroho", Photoprofile: "apa", Postid: 2, Comment: "apa tuh"}}
+// 	t.Run("Success get all Post", func(t *testing.T) {
+// 		repo.On("SearchUserData").Return(returnData).Once()
+// 		// repo.On("SearchUserPostingData").Return(returnData1).Once()
+// 		// repo.On("SearchUserPostingCommentData").Return(returnData2).Once()
+// 		usecase := New(repo, validator.New())
+// 		res, res2, res3, status := usecase.SearchUser("vanili")
+// 		assert.Equal(t, 200, status)
+// 		assert.GreaterOrEqual(t, len(res2), 1)
+// 		assert.GreaterOrEqual(t, len(res3), 1)
+// 		assert.Greater(t, res.ID, 0)
+// 		assert.Greater(t, res2[0].ID, 0)
+// 		assert.Greater(t, res3[0].Id, 0)
+// 		repo.AssertExpectations(t)
+// 	})
 
-// returnData2 := domain.User_Posting{UserID: 0, Photoprofile: "", Firstname: "", Lastname: "", Username: "",
-// 	Postid: 0, Photo: "", Caption: ""}
-
-// t.Run("Succes get user", func(t *testing.T) {
-// 	repo.On("SearchUserData", mock.Anything).Return(returnData, nil).Once()
-// 	usecase := New(repo, validator.New())
-// 	search, res := usecase.SearchUser("vaniliacahya")
-
-// 	assert.Equal(t, 200, res)
-// 	assert.Greater(t, search.UserID, 0)
-// 	assert.Equal(t, "vanili.jpg", search.Photoprofile)
-// 	assert.Equal(t, "Vanilia", search.Firstname)
-// 	assert.Equal(t, "Nugroho", search.Lastname)
-// 	assert.Equal(t, 1, search.Postid)
-// 	assert.Equal(t, "vanilia.jpg", search.Photo)
-// 	assert.Equal(t, "apalah", search.Caption)
-// 	repo.AssertExpectations(t)
-// })
-
-// t.Run("No data found", func(t *testing.T) {
-// 	repo.On("SearchUserData", mock.Anything).Return(returnData2)
-// 	usecase := New(repo, validator.New())
-// 	search, res := usecase.SearchUser("vanilii")
-// 	assert.Equal(t, 404, res)
-// 	assert.Greater(t, search.UserID, 0)
-// 	assert.Equal(t, "", search.Photoprofile)
-// 	assert.Equal(t, "", search.Firstname)
-// 	assert.Equal(t, "", search.Lastname)
-// 	assert.Equal(t, 0, search.Postid)
-// 	assert.Equal(t, "", search.Photo)
-// 	assert.Equal(t, "", search.Caption)
-// 	repo.AssertExpectations(t)
-//})
-//}
+// 	t.Run("No data found", func(t *testing.T) {
+// 		repo.On("SearchUserData").Return(domain.User{}).Once()
+// 		// repo.On("SearchUserPostingData").Return([]domain.CommentUser{}).Once()
+// 		// repo.On("SearchUserPostingCommentData").Return([]domain.PostComent{}).Once()
+// 		usecase := New(repo, validator.New())
+// 		res, res2, res3, status := usecase.SearchUser("")
+// 		assert.Equal(t, 404, status)
+// 		assert.Equal(t, len(res2), 0)
+// 		assert.Equal(t, len(res3), 0)
+// 		assert.Equal(t, []domain.PostComent([]domain.PostComent(nil)), res)
+// 		assert.Equal(t, []domain.PostComent(nil), res)
+// 		repo.AssertExpectations(t)
+// 	})
+// }
 
 func TestDeleteUser(t *testing.T) {
 	repo := new(mocks.UserData)
 
 	t.Run("Succes delete", func(t *testing.T) {
-		repo.On("DeleteUserData", mock.Anything).Return(true, nil).Once()
+		repo.On("DeleteUserData", mock.Anything).Return(true).Once()
 		usecase := New(repo, validator.New())
 		delete := usecase.DeleteUser(1)
 
@@ -197,9 +192,3 @@ func TestDeleteUser(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 }
-
-func TestSearchUserPostingData(t *testing.T) {}
-
-func TestSearchUserPostingCommentData(t *testing.T) {}
-
-func TestProfileUserData(t *testing.T) {}
