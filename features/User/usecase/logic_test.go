@@ -219,7 +219,7 @@ func TestLoginUser(t *testing.T) {
 	mockData := domain.User{Username: "NotAPanda", Password: "polar"}
 
 	returnData := domain.User
-	t.Run("Success insert data", func(t *testing.T)){
+	t.Run("Success login", func(t *testing.T)){
 
 	}
 	returnDataPostComment := []domain.UserPosting{{ID: 1, Photo: "post.jpg", Caption: "keren bgt"}}
