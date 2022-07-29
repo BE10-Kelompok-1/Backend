@@ -48,6 +48,45 @@ func (_m *UserUseCase) LoginUser(userdata domain.User) (domain.User, error) {
 	return r0, r1
 }
 
+// ProfileUser provides a mock function with given fields: userid
+func (_m *UserUseCase) ProfileUser(userid int) (domain.User, []domain.UserPosting, []domain.CommentUser, int) {
+	ret := _m.Called(userid)
+
+	var r0 domain.User
+	if rf, ok := ret.Get(0).(func(int) domain.User); ok {
+		r0 = rf(userid)
+	} else {
+		r0 = ret.Get(0).(domain.User)
+	}
+
+	var r1 []domain.UserPosting
+	if rf, ok := ret.Get(1).(func(int) []domain.UserPosting); ok {
+		r1 = rf(userid)
+	} else {
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).([]domain.UserPosting)
+		}
+	}
+
+	var r2 []domain.CommentUser
+	if rf, ok := ret.Get(2).(func(int) []domain.CommentUser); ok {
+		r2 = rf(userid)
+	} else {
+		if ret.Get(2) != nil {
+			r2 = ret.Get(2).([]domain.CommentUser)
+		}
+	}
+
+	var r3 int
+	if rf, ok := ret.Get(3).(func(int) int); ok {
+		r3 = rf(userid)
+	} else {
+		r3 = ret.Get(3).(int)
+	}
+
+	return r0, r1, r2, r3
+}
+
 // RegisterUser provides a mock function with given fields: newuser, cost
 func (_m *UserUseCase) RegisterUser(newuser domain.User, cost int) int {
 	ret := _m.Called(newuser, cost)
@@ -63,7 +102,7 @@ func (_m *UserUseCase) RegisterUser(newuser domain.User, cost int) int {
 }
 
 // SearchUser provides a mock function with given fields: username
-func (_m *UserUseCase) SearchUser(username string) (domain.User, int) {
+func (_m *UserUseCase) SearchUser(username string) (domain.User, []domain.UserPosting, []domain.CommentUser, int) {
 	ret := _m.Called(username)
 
 	var r0 domain.User
@@ -73,14 +112,32 @@ func (_m *UserUseCase) SearchUser(username string) (domain.User, int) {
 		r0 = ret.Get(0).(domain.User)
 	}
 
-	var r1 int
-	if rf, ok := ret.Get(1).(func(string) int); ok {
+	var r1 []domain.UserPosting
+	if rf, ok := ret.Get(1).(func(string) []domain.UserPosting); ok {
 		r1 = rf(username)
 	} else {
-		r1 = ret.Get(1).(int)
+		if ret.Get(1) != nil {
+			r1 = ret.Get(1).([]domain.UserPosting)
+		}
 	}
 
-	return r0, r1
+	var r2 []domain.CommentUser
+	if rf, ok := ret.Get(2).(func(string) []domain.CommentUser); ok {
+		r2 = rf(username)
+	} else {
+		if ret.Get(2) != nil {
+			r2 = ret.Get(2).([]domain.CommentUser)
+		}
+	}
+
+	var r3 int
+	if rf, ok := ret.Get(3).(func(string) int); ok {
+		r3 = rf(username)
+	} else {
+		r3 = ret.Get(3).(int)
+	}
+
+	return r0, r1, r2, r3
 }
 
 // UpdateUser provides a mock function with given fields: newuser, userid, cost
