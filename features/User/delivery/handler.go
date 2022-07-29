@@ -101,14 +101,14 @@ func (uh *userHandler) Update() echo.HandlerFunc {
 
 		file, err := c.FormFile("photoprofile")
 
-		if err != nil {
+		if err == nil {
 			log.Println(err)
+			filename := fmt.Sprintf("%s_profilepic.jpg", newuser.Username)
+			log.Println(filename)
+			link := awss3.DoUpload(uh.conn, *file, filename)
+			newuser.Photoprofile = link
 		}
 
-		filename := fmt.Sprintf("%s_profilepic.jpg", newuser.Username)
-		log.Println(filename)
-		link := awss3.DoUpload(uh.conn, *file, filename)
-		newuser.Photoprofile = link
 		status := uh.useUsecase.UpdateUser(newuser.ToModel(), id, cost)
 
 		if status == 400 {
@@ -278,6 +278,9 @@ func (uh *userHandler) Profile() echo.HandlerFunc {
 		res2["firstname"] = profile.Firstname
 		res2["lastname"] = profile.Lastname
 		res2["username"] = profile.Username
+		res2["email"] = profile.Email
+		res2["birthdate"] = profile.Birthdate
+		res2["password"] = profile.Password
 		for i := 0; i < len(posting); i++ {
 			var res = map[string]interface{}{}
 			for j := 0; j < len(comment); j++ {
