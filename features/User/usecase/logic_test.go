@@ -136,42 +136,6 @@ func TestUpdateUser(t *testing.T) {
 	})
 }
 
-<<<<<<< HEAD
-// func TestSearchUser(t *testing.T) {
-// 	repo := new(mocks.UserData)
-// 	returnData := domain.User{ID: 1, Firstname: "Vanili", Lastname: "Nugroho", Username: "vanili", Email: "vanili@vanili", Password: "d78", Birthdate: "1996-04-25", Photoprofile: "jpg"}
-// 	// returnData1 := []domain.UserPosting{{ID: 1, Photo: "jpg", Caption: "a"}}
-// 	// returnData2 := []domain.CommentUser{{Id: 1, Firstname: "Vanili", Lastname: "Nugroho", Photoprofile: "apa", Postid: 2, Comment: "apa tuh"}}
-// 	t.Run("Success get all Post", func(t *testing.T) {
-// 		repo.On("SearchUserData").Return(returnData).Once()
-// 		// repo.On("SearchUserPostingData").Return(returnData1).Once()
-// 		// repo.On("SearchUserPostingCommentData").Return(returnData2).Once()
-// 		usecase := New(repo, validator.New())
-// 		res, res2, res3, status := usecase.SearchUser("vanili")
-// 		assert.Equal(t, 200, status)
-// 		assert.GreaterOrEqual(t, len(res2), 1)
-// 		assert.GreaterOrEqual(t, len(res3), 1)
-// 		assert.Greater(t, res.ID, 0)
-// 		assert.Greater(t, res2[0].ID, 0)
-// 		assert.Greater(t, res3[0].Id, 0)
-// 		repo.AssertExpectations(t)
-// 	})
-
-// 	t.Run("No data found", func(t *testing.T) {
-// 		repo.On("SearchUserData").Return(domain.User{}).Once()
-// 		// repo.On("SearchUserPostingData").Return([]domain.CommentUser{}).Once()
-// 		// repo.On("SearchUserPostingCommentData").Return([]domain.PostComent{}).Once()
-// 		usecase := New(repo, validator.New())
-// 		res, res2, res3, status := usecase.SearchUser("")
-// 		assert.Equal(t, 404, status)
-// 		assert.Equal(t, len(res2), 0)
-// 		assert.Equal(t, len(res3), 0)
-// 		assert.Equal(t, []domain.PostComent([]domain.PostComent(nil)), res)
-// 		assert.Equal(t, []domain.PostComent(nil), res)
-// 		repo.AssertExpectations(t)
-// 	})
-// }
-=======
 func TestSearchUser(t *testing.T) {
 	repo := new(mocks.UserData)
 
@@ -197,7 +161,9 @@ func TestSearchUser(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 
-	t.Run("wrong input")
+	t.Run("Wrong Input", func(t *testing.T) {
+
+	})
 
 	t.Run("Data not found", func(t *testing.T) {
 		returnDatauser.ID = 0
@@ -212,8 +178,6 @@ func TestSearchUser(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 }
->>>>>>> 22265ad (fix update)
-
 func TestDeleteUser(t *testing.T) {
 	repo := new(mocks.UserData)
 
@@ -235,8 +199,6 @@ func TestDeleteUser(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 }
-<<<<<<< HEAD
-=======
 
 func TestProfileUser(t *testing.T) {
 	repo := new(mocks.UserData)
@@ -276,4 +238,3 @@ func TestProfileUser(t *testing.T) {
 		repo.AssertExpectations(t)
 	})
 }
->>>>>>> 22265ad (fix update)
