@@ -279,7 +279,7 @@ func (uh *userHandler) Profile() echo.HandlerFunc {
 		res2["lastname"] = profile.Lastname
 		res2["username"] = profile.Username
 		res2["email"] = profile.Email
-		res2["birthdate"] = profile.Password
+		res2["birthdate"] = profile.Birthdate
 		res2["password"] = profile.Password
 		for i := 0; i < len(posting); i++ {
 			var res = map[string]interface{}{}
