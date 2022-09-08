@@ -1,4 +1,4 @@
-# ![Logo]
+## Kongkow
 
 KongKow Application created with Golang, Echo, and GORM
 
